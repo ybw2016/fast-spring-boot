@@ -14,6 +14,8 @@
         <module>fast-spring-boot-rxjava</module>
         <module>MQ/fast-spring-boot-kafka</module>
         <module>SpringCloud/fast-spring-boot-cloud-server</module>
+        <module>SpringCloud/fast-spring-boot-cloud-provider</module>
+        <module>SpringCloud/fast-spring-boot-cloud-consumer</module>
     </modules>
 
 </project>
