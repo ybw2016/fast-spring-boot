@@ -1,4 +1,4 @@
-package kafka.biz;
+package kafka.helloworld;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class KafkaConsumer {
-    @KafkaListener(topics = {"test"})
-    public void receive(String content) {
-        System.err.println("Consumer -> 消息接收成功：" + content);
-    }
+//    @KafkaListener(topics = {"test"})
+//    public void receive(String content) {
+//        System.err.println("Consumer -> 消息接收成功：" + content);
+//    }
 }

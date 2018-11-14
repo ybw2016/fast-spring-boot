@@ -1,9 +1,44 @@
-server:
-  port: 8081
+#server:
+#  port: 8081
+##spring:
+#kafka:
+#  producer:
+#    bootstrap-servers: localhost:9092
+#    retries: 0
+#    batch-size: 4096
+#    buffer-memory: 40960
+#  consumer:
+#    group-id: test-consumer-group
+#    bootstrap-servers: localhost:9092
+#    enable-auto-commit: true
+#    auto-commit-interval: 100ms
+#    auto-offset-reset: latest
+
 spring:
+  application:
+    name: kafka-test
   kafka:
+    # 指定kafka 代理地址，可以多个
+    bootstrap-servers: localhost:9092
     producer:
-      bootstrap-servers: localhost:9092
+      retries: 0
+      # 每次批量发送消息的数量
+      batch-size: 16384
+      # 缓存容量
+      buffer-memory: 33554432
+      # 指定消息key和消息体的编解码方式
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
-      group-id: test-consumer-group
-      bootstrap-servers: localhost:9092
+      # 指定默认消费者group id
+      group-id: consumer-test
+      auto-commit-interval: 100ms
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      # 指定消息key和消息体的编解码方式
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    # 指定listener 容器中的线程数，用于提高并发量
+    listener:
+      concurrency: 3
+

@@ -10,7 +10,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
+        <module>fast-spring-boot-basic</module>
+        <module>fast-spring-boot-rxjava</module>
         <module>MQ/fast-spring-boot-kafka</module>
+        <module>SpringCloud/fast-spring-boot-cloud-server</module>
     </modules>
 
 </project>
