@@ -1,4 +1,4 @@
-package kafka.controller;
+package com.fast.kafka.controller;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,7 +1,4 @@
-package kafka.listener;
-
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.KafkaListener;
+package com.fast.kafka.listener;
 
 import lombok.extern.slf4j.Slf4j;
 

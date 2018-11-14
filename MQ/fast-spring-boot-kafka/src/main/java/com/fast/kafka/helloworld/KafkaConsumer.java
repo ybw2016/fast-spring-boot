@@ -1,6 +1,5 @@
-package kafka.helloworld;
+package com.fast.kafka.helloworld;
 
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 /**

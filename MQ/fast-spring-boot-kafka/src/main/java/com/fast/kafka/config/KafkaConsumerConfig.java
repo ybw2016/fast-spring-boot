@@ -1,4 +1,4 @@
-package kafka.config;
+package com.fast.kafka.config;
 
 /**
  * @author bowen.yan

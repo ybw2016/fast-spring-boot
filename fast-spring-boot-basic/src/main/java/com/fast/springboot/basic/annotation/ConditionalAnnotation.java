@@ -36,7 +36,6 @@ public class ConditionalAnnotation {
         return "";
     }
 
-
     //@ConditionalOnClass(TomcatWebServer.class)
     @Bean
     public Abc abcBean() {

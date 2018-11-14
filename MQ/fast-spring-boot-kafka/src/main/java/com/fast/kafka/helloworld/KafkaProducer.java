@@ -1,13 +1,4 @@
-package kafka.helloworld;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFuture;
-
-import java.util.UUID;
+package com.fast.kafka.helloworld;
 
 /**
  * 生产者

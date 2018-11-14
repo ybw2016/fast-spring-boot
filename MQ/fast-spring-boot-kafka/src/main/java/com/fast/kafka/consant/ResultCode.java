@@ -1,4 +1,4 @@
-package kafka.consant;
+package com.fast.kafka.consant;
 
 public class ResultCode {
     public static final Integer SUCCESS = 0;

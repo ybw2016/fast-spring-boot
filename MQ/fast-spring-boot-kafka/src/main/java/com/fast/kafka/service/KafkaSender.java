@@ -1,4 +1,4 @@
-package kafka.service;
+package com.fast.kafka.service;
 
 /**
  * @author bowen.yan
