@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
  * @date 2018-11-14
  */
 @Service
-public class IndexService {
+public class UserService {
     @Value("${app.service-url}")
     private String appServiceUrl;
 

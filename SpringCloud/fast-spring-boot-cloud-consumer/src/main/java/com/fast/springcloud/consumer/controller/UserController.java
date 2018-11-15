@@ -1,6 +1,6 @@
 package com.fast.springcloud.consumer.controller;
 
-import com.fast.springcloud.consumer.service.IndexService;
+import com.fast.springcloud.consumer.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2018-11-14
  */
 @RestController
-public class IndexController {
+public class UserController {
     @Autowired
-    private IndexService indexService;
+    private UserService userService;
 
     @GetMapping("hello")
     public String hello(String name) {
-        String result = indexService.callHello(name);
+        String result = userService.callHello(name);
         return result;
     }
 }
