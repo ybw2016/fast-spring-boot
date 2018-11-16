@@ -20,13 +20,28 @@ public class Base64Util {
     }
 
     public static void main(String[] args) {
-        String group = "lisi";
-        System.out.println("encrypt name -> " + encrypt(group));
-        System.out.println("decrypt name -> " + decrypt(encrypt(group)));
+        System.out.println("encrypt name -> " + encrypt("zhangsan"));
+        System.out.println("encrypt password -> " + encrypt("123456"));
+        System.out.println("decrypt name -> " + decrypt(encrypt("zhangsan")));
+        System.out.println("encrypt name lisi -> " + encrypt("lisi"));
+
+        System.out.println();
+        System.out.println("encrypt addressCode -> " + encrypt("110022"));
+        System.out.println("decrypt addressCode -> " + decrypt(encrypt("110022")));
+        System.out.println("encrypt addressCode -> " + encrypt("110033"));
+        System.out.println("decrypt addressCode -> " + decrypt(encrypt("110033")));
+
         /*
         // 运行结果
-        encrypt name -> emhhbmdzYW4=
-        decrypt name -> zhangsan
+            encrypt name -> emhhbmdzYW4=
+            encrypt password -> MTIzNDU2
+            decrypt name -> zhangsan
+            encrypt name lisi -> bGlzaQ==
+
+            encrypt addressCode -> MTEwMDIy
+            decrypt addressCode -> 110022
+            encrypt addressCode -> MTEwMDMz
+            decrypt addressCode -> 110033
         */
     }
 }

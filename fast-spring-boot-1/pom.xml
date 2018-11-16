@@ -44,7 +44,6 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
             <version>8.5.23</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -102,6 +101,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

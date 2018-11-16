@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice(annotations = {BizRestController.class})
 public class BizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
-
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return Object.class.isAssignableFrom(returnType.getMethod().getReturnType());
@@ -31,8 +30,7 @@ public class BizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         String retData = null;
         if (body != null) {
-            //retData = JsonUtil.toJsonString(body);
-            retData  = body.toString();
+            retData = JsonUtil.toJsonString(body);
             log.info("BizResponseBodyAdvice beforeBodyWrite -> retData：{}", retData);
         }
         return retData;

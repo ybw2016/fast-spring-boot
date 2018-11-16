@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DecryptParam {
+public @interface DecryptRequestParam {
     String value() default "";
+
+    boolean required() default true;
 }

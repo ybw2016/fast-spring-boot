@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
+        <module>fast-spring-boot-1</module>
         <module>fast-spring-boot-basic</module>
         <module>fast-spring-boot-rxjava</module>
         <module>MQ/fast-spring-boot-kafka</module>
@@ -18,4 +19,18 @@
         <module>SpringCloud/fast-spring-boot-cloud-consumer</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>maven-aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

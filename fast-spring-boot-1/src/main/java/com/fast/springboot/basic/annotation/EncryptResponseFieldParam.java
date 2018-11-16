@@ -17,6 +17,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
 @JsonSerialize(using = EncryptOutputSerializer.class)
-public @interface EncryptParam {
+public @interface EncryptResponseFieldParam {
     String value() default "";
 }

@@ -1,5 +1,6 @@
 package com.fast.springboot.basic.serializer;
 
+import com.fast.springboot.basic.util.Base64Util;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -15,9 +16,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DecryptInputSerializer extends JsonDeserializer<Object> {
+    public DecryptInputSerializer() {
+    }
+
     @Override
     public Object deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        System.out.println("DecryptInputSerializer enters");
-        return null;
+        String fieldName = jsonParser.getCurrentName();
+        String rawValue = jsonParser.getValueAsString();
+        String newValue = Base64Util.decrypt(rawValue);
+        log.info("DecryptInputSerializer -> key:{}, rawValue:{}, newValue:{}", fieldName, rawValue, newValue);
+        return newValue;
     }
 }
