@@ -45,7 +45,7 @@ public class DecryptController {
     }
 
     /**
-     * 请求：http://127.0.0.1:8080/security/decrypt/post
+     * 请求url：http://127.0.0.1:8080/security/decrypt/post
      * 入参：
      * {
      * "addressCode":"MTEwMDIy",
@@ -64,12 +64,27 @@ public class DecryptController {
         return address;
     }
 
+    /**
+     * 无法自动解密
+     * 请求url： http://127.0.0.1:8080/security/decrypt/post-form
+     * 参数：
+     * addressCode MTEwMDIy
+     * addressName bj
+     * 运行结果：
+     * "{\"addressCode\":\"MTEwMDIy\",\"addressName\":\"bj\"}"
+     */
     @PostMapping("/decrypt/post-form")
     public AddressFormJackson decryptAddressForm(AddressFormJackson address) {
         log.info("decryptAddressForm -> {}", address);
         return address;
     }
 
+    /**
+     * 无法自动解密
+     * 请求url：http://localhost:8080/security/decrypt/param/emhhbmdzYW4=
+     * 请求参数：无
+     * 返回结果：emhhbmdzYW4=
+     */
     @RequestMapping("/decrypt/param/{username}")
     @ResponseBody
     public String testPathVariable(@PathVariable String username) {
