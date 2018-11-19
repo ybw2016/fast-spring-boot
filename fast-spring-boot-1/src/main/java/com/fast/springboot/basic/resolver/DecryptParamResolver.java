@@ -39,6 +39,7 @@ public class DecryptParamResolver implements HandlerMethodArgumentResolver {
         for (Map.Entry<String, String[]> entry : servletRequest.getParameterMap().entrySet()) {
             if (methodParameter.getParameterName().equals(entry.getKey())) {
                 String newValue = Base64Util.decrypt(entry.getValue()[0]);
+                // DecryptParamResolver -> key:username, rawValue:{emhhbmdzYW4=}, newValue:zhangsan
                 log.info("DecryptParamResolver -> key:{}, rawValue:{}, newValue:{}",
                         entry.getKey(), ArrayUtils.toString(entry.getValue()), newValue);
                 return newValue;
