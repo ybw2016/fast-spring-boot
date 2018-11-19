@@ -45,7 +45,7 @@ public class DecryptController {
     }
 
     /**
-     * 请求url：http://127.0.0.1:8080/security/decrypt/post
+     * 请求url：http://127.0.0.1:8080/security/decrypt/post-json
      * 入参：
      * {
      * "addressCode":"MTEwMDIy",
