@@ -6,6 +6,7 @@ import com.fast.springboot.basic.model.Address;
 import com.fast.springboot.basic.model.AddressFormJackson;
 import com.fast.springboot.basic.model.AddressJackson;
 import com.fast.springboot.basic.model.User;
+import com.fast.springboot.basic.util.Base64Util;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,13 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 说明：
- * 一。加密：（将数据吐出到端）
- * 1. 通过EncryptOutputSerializer类实现；
- * 二。解密：（解析入参）
- * 1. GET请求过来的入参，通过DecryptParamResolver实现数据解密；
- * 2. POST RequestBody方式，通过DecryptInputSerializer类实现；
- *
  * @author bowen.yan
  * @date 2018-11-16
  */
@@ -75,7 +69,12 @@ public class DecryptController {
      */
     @PostMapping("/decrypt/post-form")
     public AddressFormJackson decryptAddressForm(AddressFormJackson address) {
-        log.info("decryptAddressForm -> {}", address);
+        log.info("decryptAddressForm rawAddress -> {}", address);
+
+        // 手动解密：
+        address.setAddressCode(Base64Util.decrypt(address.getAddressCode()));
+        log.info("decryptAddressForm newAddress -> {}", address);
+
         return address;
     }
 
@@ -88,7 +87,11 @@ public class DecryptController {
     @RequestMapping("/decrypt/param/{username}")
     @ResponseBody
     public String testPathVariable(@PathVariable String username) {
-        log.info("testPathVariable  -> {}", username);
-        return username;
+        // testPathVariable -> emhhbmdzYW4=
+        log.info("testPathVariable rawUserName -> {}", username);
+        // 手动解密：
+        String newUserName = Base64Util.decrypt(username);
+        log.info("testPathVariable newUserName -> {}", newUserName);
+        return newUserName;
     }
 }
