@@ -17,6 +17,7 @@
         <module>SpringCloud/fast-spring-boot-cloud-server</module>
         <module>SpringCloud/fast-spring-boot-cloud-provider</module>
         <module>SpringCloud/fast-spring-boot-cloud-consumer</module>
+        <module>webflux</module>
     </modules>
 
     <repositories>
