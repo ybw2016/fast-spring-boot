@@ -1,7 +1,7 @@
 package com.fast.springboot.basic.resolver;
 
 import com.fast.springboot.basic.annotation.DecryptPathVariable;
-import com.fast.springboot.basic.util.Base64Util;
+import com.fast.springboot.basic.util.LogExtUtil;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
@@ -25,7 +25,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 自定义PathVariable解析器
+ * HTTP GET PathVariable解密器
  *
  * @author bowen.yan
  * @date 2018-11-20
@@ -61,10 +61,7 @@ public class DecryptPathVariableResolver extends AbstractNamedValueMethodArgumen
         Object decrypted = request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE + "_DECRYPT", RequestAttributes.SCOPE_REQUEST);
         if (decrypted == null) {
             for (Map.Entry<String, String> entry : uriTemplateVars.entrySet()) {
-                String rawValue = entry.getValue();
-                String newValue = Base64Util.decrypt(rawValue);
-                log.info("DecryptPathVariableResolver -> key:{}, rawValue:{}, newValue:{}", entry.getKey(), rawValue, newValue);
-                entry.setValue(newValue);
+                entry.setValue(LogExtUtil.decryptAndLog("DecryptPathVariableResolver", entry.getKey(), entry.getValue()));
             }
             request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE + "_DECRYPT", true, RequestAttributes.SCOPE_REQUEST);
         }
