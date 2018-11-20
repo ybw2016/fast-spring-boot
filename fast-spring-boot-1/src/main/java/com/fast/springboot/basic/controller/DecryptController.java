@@ -1,6 +1,7 @@
 package com.fast.springboot.basic.controller;
 
 import com.fast.springboot.basic.annotation.BizRestController;
+import com.fast.springboot.basic.annotation.DecryptPathVariableRequestParam;
 import com.fast.springboot.basic.annotation.DecryptRequestParam;
 import com.fast.springboot.basic.model.Address;
 import com.fast.springboot.basic.model.AddressFormJackson;
@@ -8,11 +9,10 @@ import com.fast.springboot.basic.model.AddressJackson;
 import com.fast.springboot.basic.model.User;
 import com.fast.springboot.basic.util.Base64Util;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,18 +80,17 @@ public class DecryptController {
 
     /**
      * 无法自动解密
-     * 请求url：http://localhost:8080/security/decrypt/param/emhhbmdzYW4=
+     * 请求url：http://localhost:8080/security/decrypt/param/emhhbmdzYW4=/MTIzNDU2?address=bj
      * 请求参数：无
-     * 返回结果：emhhbmdzYW4=
+     * 返回结果：result -> username:zhangsan, password:123456, address:bj
      */
-    @RequestMapping("/decrypt/param/{username}")
-    @ResponseBody
-    public String testPathVariable(@PathVariable String username) {
-        // testPathVariable -> emhhbmdzYW4=
-        log.info("testPathVariable rawUserName -> {}", username);
-        // 手动解密：
-        String newUserName = Base64Util.decrypt(username);
-        log.info("testPathVariable newUserName -> {}", newUserName);
-        return newUserName;
+    @RequestMapping("/decrypt/param/{username}/{password}")
+    public String testPathVariable(@DecryptPathVariableRequestParam String username,
+                                   @DecryptPathVariableRequestParam String password,
+                                   @RequestParam String address) {
+        log.info("testPathVariable username -> {}", username);
+        log.info("testPathVariable password -> {}", password);
+        log.info("testPathVariable address -> {}", address);
+        return String.format("result -> username:%s, password:%s, address:%s", username, password, address);
     }
 }
