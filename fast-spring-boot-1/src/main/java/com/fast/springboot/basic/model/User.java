@@ -1,6 +1,6 @@
 package com.fast.springboot.basic.model;
 
-import com.fast.springboot.basic.annotation.EncryptResponseFieldParam;
+import com.fast.springboot.basic.annotation.EncryptResponseField;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @EncryptResponseFieldParam
+    @EncryptResponseField
     private String userName;
-    @EncryptResponseFieldParam
+    @EncryptResponseField
     private String password;
     private String mobile;
     private Address address;

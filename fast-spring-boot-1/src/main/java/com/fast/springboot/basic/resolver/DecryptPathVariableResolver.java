@@ -1,6 +1,6 @@
 package com.fast.springboot.basic.resolver;
 
-import com.fast.springboot.basic.annotation.DecryptPathVariableRequestParam;
+import com.fast.springboot.basic.annotation.DecryptPathVariable;
 import com.fast.springboot.basic.util.Base64Util;
 
 import org.springframework.core.MethodParameter;
@@ -31,16 +31,16 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2018-11-20
  */
 @Slf4j
-public class DecryptPathVariableParamResolver extends AbstractNamedValueMethodArgumentResolver implements UriComponentsContributor {
+public class DecryptPathVariableResolver extends AbstractNamedValueMethodArgumentResolver implements UriComponentsContributor {
     private static final TypeDescriptor STRING_TYPE_DESCRIPTOR = TypeDescriptor.valueOf(String.class);
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        if (!parameter.hasParameterAnnotation(DecryptPathVariableRequestParam.class)) {
+        if (!parameter.hasParameterAnnotation(DecryptPathVariable.class)) {
             return false;
         }
         if (Map.class.isAssignableFrom(parameter.nestedIfOptional().getNestedParameterType())) {
-            String paramName = parameter.getParameterAnnotation(DecryptPathVariableRequestParam.class).value();
+            String paramName = parameter.getParameterAnnotation(DecryptPathVariable.class).value();
             return StringUtils.hasText(paramName);
         }
         return true;
@@ -48,8 +48,8 @@ public class DecryptPathVariableParamResolver extends AbstractNamedValueMethodAr
 
     @Override
     protected NamedValueInfo createNamedValueInfo(MethodParameter parameter) {
-        DecryptPathVariableRequestParam annotation = parameter.getParameterAnnotation(DecryptPathVariableRequestParam.class);
-        return new DecryptPathVariableParamResolver.DecryptPathVariableRequestParamNamedValueInfo(annotation);
+        DecryptPathVariable annotation = parameter.getParameterAnnotation(DecryptPathVariable.class);
+        return new DecryptPathVariableResolver.DecryptPathVariableRequestParamNamedValueInfo(annotation);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class DecryptPathVariableParamResolver extends AbstractNamedValueMethodAr
             for (Map.Entry<String, String> entry : uriTemplateVars.entrySet()) {
                 String rawValue = entry.getValue();
                 String newValue = Base64Util.decrypt(rawValue);
-                log.info("DecryptPathVariableParamResolver -> key:{}, rawValue:{}, newValue:{}", entry.getKey(), rawValue, newValue);
+                log.info("DecryptPathVariableResolver -> key:{}, rawValue:{}, newValue:{}", entry.getKey(), rawValue, newValue);
                 entry.setValue(newValue);
             }
             request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE + "_DECRYPT", true, RequestAttributes.SCOPE_REQUEST);
@@ -99,7 +99,7 @@ public class DecryptPathVariableParamResolver extends AbstractNamedValueMethodAr
             return;
         }
 
-        DecryptPathVariableRequestParam ann = parameter.getParameterAnnotation(DecryptPathVariableRequestParam.class);
+        DecryptPathVariable ann = parameter.getParameterAnnotation(DecryptPathVariable.class);
         String name = (ann != null && !StringUtils.isEmpty(ann.value()) ? ann.value() : parameter.getParameterName());
         value = formatUriValue(conversionService, new TypeDescriptor(parameter.nestedIfOptional()), value);
         uriVariables.put(name, value);
@@ -118,7 +118,7 @@ public class DecryptPathVariableParamResolver extends AbstractNamedValueMethodAr
     }
 
     private static class DecryptPathVariableRequestParamNamedValueInfo extends NamedValueInfo {
-        public DecryptPathVariableRequestParamNamedValueInfo(DecryptPathVariableRequestParam annotation) {
+        public DecryptPathVariableRequestParamNamedValueInfo(DecryptPathVariable annotation) {
             super(annotation.name(), annotation.required(), ValueConstants.DEFAULT_NONE);
         }
     }

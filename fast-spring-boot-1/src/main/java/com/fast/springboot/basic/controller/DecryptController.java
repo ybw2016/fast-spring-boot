@@ -1,7 +1,7 @@
 package com.fast.springboot.basic.controller;
 
 import com.fast.springboot.basic.annotation.BizRestController;
-import com.fast.springboot.basic.annotation.DecryptPathVariableRequestParam;
+import com.fast.springboot.basic.annotation.DecryptPathVariable;
 import com.fast.springboot.basic.annotation.DecryptRequestParam;
 import com.fast.springboot.basic.model.Address;
 import com.fast.springboot.basic.model.AddressFormJackson;
@@ -85,8 +85,8 @@ public class DecryptController {
      * 返回结果：result -> username:zhangsan, password:123456, address:bj
      */
     @RequestMapping("/decrypt/param/{username}/{password}")
-    public String testPathVariable(@DecryptPathVariableRequestParam String username,
-                                   @DecryptPathVariableRequestParam String password,
+    public String testPathVariable(@DecryptPathVariable String username,
+                                   @DecryptPathVariable String password,
                                    @RequestParam String address) {
         log.info("testPathVariable username -> {}", username);
         log.info("testPathVariable password -> {}", password);

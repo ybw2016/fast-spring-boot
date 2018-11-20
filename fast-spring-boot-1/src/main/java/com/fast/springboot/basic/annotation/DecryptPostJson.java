@@ -1,6 +1,8 @@
 package com.fast.springboot.basic.annotation;
 
-import org.springframework.core.annotation.AliasFor;
+import com.fast.springboot.basic.serializer.DecryptInputSerializer;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,14 +13,12 @@ import java.lang.annotation.Target;
  * @author bowen.yan
  * @date 2018-11-16
  */
-@Target(ElementType.PARAMETER)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DecryptPathVariableRequestParam {
-    @AliasFor("name")
+@JacksonAnnotationsInside
+@JsonDeserialize(using = DecryptInputSerializer.class)
+public @interface DecryptPostJson {
     String value() default "";
-
-    @AliasFor("value")
-    String name() default "";
 
     boolean required() default true;
 }
