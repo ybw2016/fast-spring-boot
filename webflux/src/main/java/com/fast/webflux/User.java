@@ -1,4 +1,4 @@
-package com.example.webflux;
+package com.fast.webflux;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
