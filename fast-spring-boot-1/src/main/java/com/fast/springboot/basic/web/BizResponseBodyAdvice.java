@@ -23,7 +23,6 @@ public class BizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return Object.class.isAssignableFrom(returnType.getMethod().getReturnType());
-        //return true;
     }
 
     @Override

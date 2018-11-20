@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class User {
     @EncryptResponseField
     private String userName;
-    @EncryptResponseField
+    //@EncryptResponseField
     private String password;
     private String mobile;
     private Address address;

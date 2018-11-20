@@ -1,9 +1,8 @@
 package com.fast.springboot.basic.resolver;
 
 import com.fast.springboot.basic.annotation.DecryptRequestParam;
-import com.fast.springboot.basic.util.Base64Util;
+import com.fast.springboot.basic.util.LogExtUtil;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -17,11 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * HTTP GET 普通参数解密器
+ *
  * @author bowen.yan
  * @date 2018-11-16
  */
 @Slf4j
-public class DecryptParamResolver implements HandlerMethodArgumentResolver {
+public class DecryptRequestParamResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         //如果函数包含我们的自定义注解，那就走resolveArgument()函数
@@ -36,11 +37,7 @@ public class DecryptParamResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest servletRequest = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
         for (Map.Entry<String, String[]> entry : servletRequest.getParameterMap().entrySet()) {
             if (methodParameter.getParameterName().equals(entry.getKey())) {
-                String newValue = Base64Util.decrypt(entry.getValue()[0]);
-                // DecryptParamResolver -> key:username, rawValue:{emhhbmdzYW4=}, newValue:zhangsan
-                log.info("DecryptParamResolver -> key:{}, rawValue:{}, newValue:{}",
-                        entry.getKey(), ArrayUtils.toString(entry.getValue()), newValue);
-                return newValue;
+                return LogExtUtil.decryptAndLog("DecryptRequestParamResolver", entry.getKey(), entry.getValue()[0]);
             }
         }
 

@@ -2,13 +2,14 @@ package com.fast.springboot.basic.controller;
 
 import com.fast.springboot.basic.annotation.BizRestController;
 import com.fast.springboot.basic.annotation.DecryptPathVariable;
+import com.fast.springboot.basic.annotation.DecryptPostForm;
 import com.fast.springboot.basic.annotation.DecryptRequestParam;
 import com.fast.springboot.basic.model.Address;
 import com.fast.springboot.basic.model.AddressFormJackson;
 import com.fast.springboot.basic.model.AddressJackson;
 import com.fast.springboot.basic.model.User;
-import com.fast.springboot.basic.util.Base64Util;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DecryptController {
     /**
+     * 功能：1. HTTP-GET 请求参数自动解密; 2. 输出结果自动加密;
+     *
+     * @see com.fast.springboot.basic.resolver.DecryptRequestParamResolver
+     * @see com.fast.springboot.basic.serializer.EncryptOutputSerializer
      * 请求url：http://127.0.0.1:8080/security/decrypt?username=emhhbmdzYW4=&password=MTIzNDU2&mobile=13811112222
      * 运行解析过程：
      * username=emhhbmdzYW4= -> zhangsan
      * password=MTIzNDU2 -> 123456
      * mobile=13811112222 -> 13811112222
      * 运行结果：
-     * "{\"userName\":\"emhhbmdzYW4=\",\"password\":\"MTIzNDU2\",\"mobile\":\"13811112222\",\"address\":{\"addressCode\":\"MTEwMDIy\",\"addressName\":\"北京海淀\"}}"
+     * "{\"userName\":\"emhhbmdzYW4=\",\"password\":\"123456\",\"mobile\":\"13811112222\",\"address\":{\"addressCode\":\"MTEwMDIy\",\"addressName\":\"北京海淀\"}}"
      */
     @RequestMapping("/decrypt")
     public User decryptName(@DecryptRequestParam String username, @DecryptRequestParam String password, String mobile) {
@@ -39,6 +44,9 @@ public class DecryptController {
     }
 
     /**
+     * 功能：HTTP POST JSON参数的自动解密
+     *
+     * @see com.fast.springboot.basic.serializer.DecryptInputSerializer
      * 请求url：http://127.0.0.1:8080/security/decrypt/post-json
      * 入参：
      * {
@@ -49,48 +57,44 @@ public class DecryptController {
      * "addressName":"hz"
      * }
      * }
+     * 请求类型Content-Type:  application/json
      * 运行结果：
      * "{\"addressCode\":\"110022\",\"addressName\":\"bj\",\"subAddressJackson\":{\"addressCode\":\"110033\",\"addressName\":\"hz\"}}"
      */
     @PostMapping("/decrypt/post-json")
     public AddressJackson decryptAddressJson(@RequestBody AddressJackson address) {
-        log.info("decryptAddressJson -> {}", address);
         return address;
     }
 
     /**
-     * 无法自动解密
+     * 功能：HTTP POST FORM参数的自动解密
+     *
+     * @see com.fast.springboot.basic.resolver.DecryptPostFormResolver
      * 请求url： http://127.0.0.1:8080/security/decrypt/post-form
      * 参数：
      * addressCode MTEwMDIy
      * addressName bj
+     * 请求类型Content-Type:  multipart/form-data, application/x-www-form-urlencoded
      * 运行结果：
-     * "{\"addressCode\":\"MTEwMDIy\",\"addressName\":\"bj\"}"
+     * "{\"addressCode\":\"110022\",\"addressName\":\"bj\"}"
      */
     @PostMapping("/decrypt/post-form")
-    public AddressFormJackson decryptAddressForm(AddressFormJackson address) {
-        log.info("decryptAddressForm rawAddress -> {}", address);
-
-        // 手动解密：
-        address.setAddressCode(Base64Util.decrypt(address.getAddressCode()));
-        log.info("decryptAddressForm newAddress -> {}", address);
-
+    public AddressFormJackson decryptAddressForm(@DecryptPostForm AddressFormJackson address) {
         return address;
     }
 
     /**
-     * 无法自动解密
+     * 功能：HTTP GET PathVariable参数的自动解密
+     *
+     * @see com.fast.springboot.basic.resolver.DecryptPathVariableResolver
      * 请求url：http://localhost:8080/security/decrypt/param/emhhbmdzYW4=/MTIzNDU2?address=bj
      * 请求参数：无
-     * 返回结果：result -> username:zhangsan, password:123456, address:bj
+     * 返回结果：username:zhangsan, password:123456, address:bj
      */
     @RequestMapping("/decrypt/param/{username}/{password}")
-    public String testPathVariable(@DecryptPathVariable String username,
-                                   @DecryptPathVariable String password,
-                                   @RequestParam String address) {
-        log.info("testPathVariable username -> {}", username);
-        log.info("testPathVariable password -> {}", password);
-        log.info("testPathVariable address -> {}", address);
-        return String.format("result -> username:%s, password:%s, address:%s", username, password, address);
+    public String decryptPathVariable(@DecryptPathVariable String username,
+                                      @PathVariable String password,
+                                      @RequestParam String address) {
+        return String.format("username:%s, password:%s, address:%s", username, password, address);
     }
 }

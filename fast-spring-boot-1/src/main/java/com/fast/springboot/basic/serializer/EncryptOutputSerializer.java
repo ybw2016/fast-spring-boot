@@ -31,7 +31,7 @@ public class EncryptOutputSerializer extends JsonSerializer<Object> {
             jsonGenerator.writeObject(value);
         } else {
             String newValue = Base64Util.encrypt(value.toString());
-            log.info("EncryptOutputSerializer -> key:{}, rawValue:{}, newValue:{}", fieldName, value, newValue);
+            log.info("EncryptOutputSerializer -> fieldName:{}, rawValue:{}, newValue:{}", fieldName, value, newValue);
             jsonGenerator.writeString(newValue);
         }
     }
