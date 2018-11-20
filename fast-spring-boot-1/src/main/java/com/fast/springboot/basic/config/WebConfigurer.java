@@ -1,6 +1,7 @@
 package com.fast.springboot.basic.config;
 
 import com.fast.springboot.basic.resolver.DecryptParamResolver;
+import com.fast.springboot.basic.resolver.DecryptPathVariableResolver;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,10 +14,11 @@ import java.util.List;
  * @date 2018-11-16
  */
 @Configuration
-public class ApplicationConfigurer extends WebMvcConfigurerAdapter {
+public class WebConfigurer extends WebMvcConfigurerAdapter {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         super.addArgumentResolvers(argumentResolvers);
         argumentResolvers.add(new DecryptParamResolver());
+        argumentResolvers.add(new DecryptPathVariableResolver());
     }
 }

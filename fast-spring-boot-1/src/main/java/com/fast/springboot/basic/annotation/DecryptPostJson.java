@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
 @JsonDeserialize(using = DecryptInputSerializer.class)
-public @interface DecryptRequestJsonParam {
+public @interface DecryptPostJson {
     String value() default "";
 
     boolean required() default true;

@@ -1,6 +1,6 @@
 package com.fast.springboot.basic.model;
 
-import com.fast.springboot.basic.annotation.DecryptRequestJsonParam;
+import com.fast.springboot.basic.annotation.DecryptPostJson;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddressJackson {
-    @DecryptRequestJsonParam
+    @DecryptPostJson
     private String addressCode;
     private String addressName;
     private SubAddressJackson subAddressJackson;

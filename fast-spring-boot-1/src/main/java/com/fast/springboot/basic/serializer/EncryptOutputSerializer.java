@@ -1,6 +1,6 @@
 package com.fast.springboot.basic.serializer;
 
-import com.fast.springboot.basic.annotation.EncryptResponseFieldParam;
+import com.fast.springboot.basic.annotation.EncryptResponseField;
 import com.fast.springboot.basic.util.Base64Util;
 import com.fast.springboot.basic.util.ReflectionUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -27,7 +27,7 @@ public class EncryptOutputSerializer extends JsonSerializer<Object> {
             return;
         }
 
-        if (field.getAnnotation(EncryptResponseFieldParam.class) == null) {
+        if (field.getAnnotation(EncryptResponseField.class) == null) {
             jsonGenerator.writeObject(value);
         } else {
             String newValue = Base64Util.encrypt(value.toString());
