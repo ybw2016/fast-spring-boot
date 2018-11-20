@@ -28,7 +28,7 @@ public class UserHandler {
     /**
      * 查询单个对象.
      *
-     * @param request
+     * @param request 请求
      * @return
      */
     public Mono<ServerResponse> getUser(ServerRequest request) {
