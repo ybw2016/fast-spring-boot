@@ -32,6 +32,7 @@ public class BizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             retData = JsonUtil.toJsonString(body);
             log.info("BizResponseBodyAdvice beforeBodyWrite -> retData：{}", retData);
         }
-        return retData;
+        //return retData;
+        return body;
     }
 }
