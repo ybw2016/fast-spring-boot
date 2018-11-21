@@ -10,7 +10,7 @@ public class LogExtUtil {
     private static final Logger logger = LoggerFactory.getLogger(LogExtUtil.class);
 
     public static String decryptAndLog(String method, String paramName, String rawValue) {
-        String newValue = Base64Util.decrypt(rawValue);
+        String newValue = (rawValue != null) ? Base64Util.decrypt(rawValue) : null;
         logger.info("{} -> paramName:{}, rawValue:{}, newValue:{}", method, paramName, rawValue, newValue);
         return newValue;
     }

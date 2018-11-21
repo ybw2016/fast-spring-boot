@@ -9,10 +9,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,13 +30,8 @@ public class DecryptRequestParamResolver implements HandlerMethodArgumentResolve
                                   ModelAndViewContainer modelAndViewContainer,
                                   NativeWebRequest nativeWebRequest,
                                   WebDataBinderFactory webDataBinderFactory) throws Exception {
-        HttpServletRequest servletRequest = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        for (Map.Entry<String, String[]> entry : servletRequest.getParameterMap().entrySet()) {
-            if (methodParameter.getParameterName().equals(entry.getKey())) {
-                return LogExtUtil.decryptAndLog("DecryptRequestParamResolver", entry.getKey(), entry.getValue()[0]);
-            }
-        }
-
-        return null;
+        String paramName = methodParameter.getParameterName();
+        String oldValue = nativeWebRequest.getParameter(paramName);
+        return LogExtUtil.decryptAndLog("DecryptRequestParamResolver", paramName, oldValue);
     }
 }
