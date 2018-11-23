@@ -3,10 +3,12 @@ package com.fast.springboot.basic.controller;
 import com.fast.springboot.basic.annotation.BizRestController;
 import com.fast.springboot.basic.annotation.DecryptPathVariable;
 import com.fast.springboot.basic.annotation.DecryptPostForm;
+import com.fast.springboot.basic.annotation.DecryptPostJsonForm;
 import com.fast.springboot.basic.annotation.DecryptRequestParam;
 import com.fast.springboot.basic.model.Address;
 import com.fast.springboot.basic.model.AddressFormJackson;
 import com.fast.springboot.basic.model.AddressJackson;
+import com.fast.springboot.basic.model.AddressJsonManualForm;
 import com.fast.springboot.basic.model.User;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +49,7 @@ public class DecryptController {
      * 功能：HTTP POST JSON参数的自动解密
      *
      * @see com.fast.springboot.basic.serializer.DecryptInputSerializer
-     * 请求url：http://127.0.0.1:8080/security/decrypt/post-json
+     * 请求url：http://127.0.0.1:8080/security/decrypt/post-json/jackson
      * 入参：
      * {
      * "addressCode":"MTEwMDIy",
@@ -61,8 +63,31 @@ public class DecryptController {
      * 运行结果：
      * "{\"addressCode\":\"110022\",\"addressName\":\"bj\",\"subAddressJackson\":{\"addressCode\":\"110033\",\"addressName\":\"hz\"}}"
      */
-    @PostMapping("/decrypt/post-json")
+    @PostMapping("/decrypt/post-json/jackson")
     public AddressJackson decryptAddressJson(@RequestBody AddressJackson address) {
+        return address;
+    }
+
+    /**
+     * 功能：HTTP POST JSON参数的自动解密
+     *
+     * @see com.fast.springboot.basic.serializer.DecryptInputSerializer
+     * 请求url：http://127.0.0.1:8080/security/decrypt/post-json/manual
+     * 入参：
+     * {
+     * "addressCode":"MTEwMDIy",
+     * "addressName":"bj",
+     * "subAddressJackson":{
+     * "addressCode":"MTEwMDMz",
+     * "addressName":"hz"
+     * }
+     * }
+     * 请求类型Content-Type:  application/json
+     * 运行结果：
+     * "{\"addressCode\":\"110022\",\"addressName\":\"bj\",\"subAddressJackson\":{\"addressCode\":\"110033\",\"addressName\":\"hz\"}}"
+     */
+    @PostMapping("/decrypt/post-json/manual")
+    public AddressJsonManualForm decryptAddressJson2(@DecryptPostJsonForm AddressJsonManualForm address) {
         return address;
     }
 

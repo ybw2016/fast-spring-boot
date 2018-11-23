@@ -61,18 +61,18 @@ public class AesUtil {
 
     public static void main(String[] args) {
         String orderId = "L201811150001aabbdsfsf";
-//        String encryptStr = encryptByAes(orderId);
-//        System.out.println("encryptStr -> " + encryptStr);
-//        String rawOrderId = decryptByAes(encryptStr);
-//        System.out.println("decryptStr -> " + rawOrderId);
+        String encryptStr = encryptByAes(orderId);
+        System.out.println("encryptStr -> " + encryptStr);
+        String rawOrderId = decryptByAes(encryptStr);
+        System.out.println("decryptStr -> " + rawOrderId);
 
-        try {
-            String data1 = new String(Base64.encodeBase64(orderId.getBytes(Charset.forName("utf-8"))));
-            String data2 = new String(Base64.decodeBase64(data1.getBytes(Charset.forName("utf-8"))));
-            System.out.println(data1);
-            System.out.println(data2);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            String data1 = new String(Base64.encodeBase64(orderId.getBytes(Charset.forName("utf-8"))));
+//            String data2 = new String(Base64.decodeBase64(data1.getBytes(Charset.forName("utf-8"))));
+//            System.out.println(data1);
+//            System.out.println(data2);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
 }

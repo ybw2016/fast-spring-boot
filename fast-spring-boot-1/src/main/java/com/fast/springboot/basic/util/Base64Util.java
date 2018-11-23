@@ -11,8 +11,9 @@ import java.nio.charset.Charset;
 public class Base64Util {
     public static Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
+    // encodeBase64URLSafe 解决加密后的文本带/的bug，/在url中会被解析成路径，导致找不到相应的页面而报错
     public static String encrypt(String input) {
-        return new String(Base64.encodeBase64(input.getBytes(DEFAULT_CHARSET)), DEFAULT_CHARSET);
+        return new String(Base64.encodeBase64URLSafe(input.getBytes(DEFAULT_CHARSET)), DEFAULT_CHARSET);
     }
 
     public static String decrypt(String input) {
