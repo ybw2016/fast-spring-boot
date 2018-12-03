@@ -1,6 +1,6 @@
 package com.fast.springcloud.consumer.service;
 
-import com.fast.springcloud.consumer.api.AppService;
+import com.fast.springcloud.consumer.api.AppServiceClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,7 @@ public class UserService {
     @Value("${app.service-url}")
     private String appServiceUrl;
     @Autowired
-    private AppService appService;
+    private AppServiceClient appServiceClient;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -30,11 +30,11 @@ public class UserService {
 
     public String callHello2(String name) {
         // 是一个http client
-        return appService.getHelloWorld(name);
+        return appServiceClient.getHelloWorld(name);
     }
 
     public String getAddress(String addressCode) {
         // 是一个http client
-        return appService.getAddress(addressCode);
+        return appServiceClient.getAddress(addressCode);
     }
 }
