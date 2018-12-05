@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2018-12-03
  */
 @Data
-public class ReqBase {
+public class UserSysReq {
     private String serialId;
     private String fromSystem;
     private Long timestamp;

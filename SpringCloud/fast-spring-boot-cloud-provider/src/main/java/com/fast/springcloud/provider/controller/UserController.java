@@ -7,6 +7,7 @@ import com.fast.springcloud.provider.annotation.ApiBizController;
 import com.fast.springcloud.provider.dto.request.UserQueryReq;
 import com.fast.springcloud.provider.dto.response.UserListQueryRsp;
 import com.fast.springcloud.provider.dto.response.UserQueryRsp;
+import com.fast.springcloud.provider.exception.ApiBizException;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -50,7 +52,7 @@ public class UserController {
     @GetMapping("/user-info")
     @ResponseBody
     public UserQueryRsp getUserInfo(@RequestParam String username, @RequestParam String mobile) {
-        log.info("Spring Cloud Provider getUserInfo receives -> username:{}, mobile:{}", username, mobile);
+        log.info("Spring Cloud Provider getUserInfo receives -> userName:{}, mobile:{}", username, mobile);
         if (StringUtils.isNotEmpty(username)) {
             return USER_MAP.get(username);
         }
@@ -61,14 +63,22 @@ public class UserController {
     @ResponseBody
     public UserListQueryRsp getUserInfoList(@RequestBody UserQueryReq userQueryReq) {
         log.info("Spring Cloud Provider getUserInfoList receives -> userQueryReq:{}", userQueryReq);
-        UserListQueryRsp userListQueryRsp = new UserListQueryRsp();
-        if (userQueryReq.getPageNo() != null || userQueryReq.getPageSize() != null) {
-            List<UserQueryRsp> foundUsers = USER_MAP.values().stream()
-                    .skip(userQueryReq.getPageNo() - 1)
-                    .limit(userQueryReq.getPageSize())
-                    .collect(Collectors.toList());
-            userListQueryRsp.setList(foundUsers);
+        return new UserListQueryRsp(getUserInfoListData(userQueryReq));
+    }
+
+    private List<UserQueryRsp> getUserInfoListData(UserQueryReq userQueryReq) {
+        if (userQueryReq.getPageNo() == null || userQueryReq.getPageSize() == null) {
+            throw new ApiBizException("5293", "pageNo和pageSize必须都大于0");
         }
-        return userListQueryRsp;
+        if (userQueryReq.getPageNo() > 1) {
+            throw new ApiBizException("6288", "pageNo最多为1页");
+        }
+        Stream<UserQueryRsp> users = USER_MAP.values().stream();
+        if (StringUtils.isNotEmpty(userQueryReq.getUsername())) {
+            users = users.filter(user -> userQueryReq.getUsername().equals(user.getUsername()));
+        }
+        return users.skip(userQueryReq.getPageNo() - 1)
+                .limit(userQueryReq.getPageSize())
+                .collect(Collectors.toList());
     }
 }

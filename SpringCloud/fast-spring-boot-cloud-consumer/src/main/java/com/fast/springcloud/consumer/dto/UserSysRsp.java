@@ -9,8 +9,8 @@ import lombok.Data;
  * @date 2018-12-03
  */
 @Data
-public class RspBase {
-    private Integer code;
+public class UserSysRsp {
+    private String code;
     private String msg;
     private Object data;
 }

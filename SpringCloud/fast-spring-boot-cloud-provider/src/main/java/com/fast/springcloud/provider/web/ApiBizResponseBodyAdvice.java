@@ -36,22 +36,20 @@ public class ApiBizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             Object returnValue, MethodParameter methodParameter, MediaType mediaType,
             Class<? extends HttpMessageConverter<?>> converterType,
             ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
-        Response result = (Response) returnValue;
-        printInfo(methodParameter, serverHttpRequest, result);
+        printLogData(methodParameter, serverHttpRequest, returnValue);
         return BaseRsp.success(returnValue);
     }
 
-    private void printInfo(MethodParameter methodParameter, ServerHttpRequest serverHttpRequest, Response result) {
+    private void printLogData(MethodParameter methodParameter, ServerHttpRequest serverHttpRequest, Object result) {
         StringBuilder builder = new StringBuilder("\n=======================请求上下文=======================\n");
-
         Method method = methodParameter.getMethod();
         String className = method.getDeclaringClass().getName();
         String methodName = method.getName();
         String methodPath = className + "." + methodName + "()";
         String url = Optional.ofNullable(serverHttpRequest.getURI())
-                .map(it -> {
-                    String path = StringUtils.defaultIfBlank(it.getPath(), StringUtils.EMPTY);
-                    String query = StringUtils.isNotBlank(it.getQuery()) ? "?" + it.getQuery() : StringUtils.EMPTY;
+                .map(uri -> {
+                    String path = StringUtils.defaultIfBlank(uri.getPath(), StringUtils.EMPTY);
+                    String query = StringUtils.isNotBlank(uri.getQuery()) ? "?" + uri.getQuery() : StringUtils.EMPTY;
                     return path + query;
                 }).orElse(StringUtils.EMPTY);
         builder.append("调用地址").append(" : ").append(url).append("\n");

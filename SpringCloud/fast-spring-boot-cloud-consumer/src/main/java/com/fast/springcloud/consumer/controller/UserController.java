@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,5 +36,10 @@ public class UserController {
     @PostMapping("/user-info-list")
     public UserInfoListRsp getUserInfoListData(@RequestBody UserInfoReq userInfoReq) {
         return userServiceClient.queryUserListInfo(userInfoReq);
+    }
+
+    @PostMapping("/user-info-list2")
+    public List<UserInfoRsp> getUserInfoListData2(@RequestBody UserInfoReq userInfoReq) {
+        return userServiceClient.queryUserListInfo2(userInfoReq);
     }
 }

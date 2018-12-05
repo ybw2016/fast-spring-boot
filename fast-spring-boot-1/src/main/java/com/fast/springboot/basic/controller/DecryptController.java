@@ -34,7 +34,7 @@ public class DecryptController {
      * @see com.fast.springboot.basic.serializer.EncryptOutputSerializer
      * 请求url：http://127.0.0.1:8080/security/decrypt?username=emhhbmdzYW4=&password=MTIzNDU2&mobile=13811112222
      * 运行解析过程：
-     * username=emhhbmdzYW4= -> zhangsan
+     * userName=emhhbmdzYW4= -> zhangsan
      * password=MTIzNDU2 -> 123456
      * mobile=13811112222 -> 13811112222
      * 运行结果：
@@ -114,12 +114,12 @@ public class DecryptController {
      * @see com.fast.springboot.basic.resolver.DecryptPathVariableResolver
      * 请求url：http://localhost:8080/security/decrypt/param/emhhbmdzYW4=/MTIzNDU2?address=bj
      * 请求参数：无
-     * 返回结果：username:zhangsan, password:123456, address:bj
+     * 返回结果：userName:zhangsan, password:123456, address:bj
      */
     @RequestMapping("/decrypt/param/{username}/{password}")
     public String decryptPathVariable(@DecryptPathVariable String username,
                                       @PathVariable String password,
                                       @RequestParam String address) {
-        return String.format("username:%s, password:%s, address:%s", username, password, address);
+        return String.format("userName:%s, password:%s, address:%s", username, password, address);
     }
 }

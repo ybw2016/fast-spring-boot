@@ -14,7 +14,7 @@ public class UserQueryReq extends QueryReqBase {
     @Override
     public String toString() {
         return "UserQueryReq{" + super.toString() +
-                ", username='" + username + '\'' +
+                ", userName='" + username + '\'' +
                 ", mobile='" + mobile + '\'' +
                 '}';
     }

@@ -1,23 +1,27 @@
 package com.fast.springcloud.consumer.api;
 
-import com.fast.springcloud.consumer.dto.ReqBase;
-import com.fast.springcloud.consumer.dto.RspBase;
+import com.fast.springcloud.consumer.constant.UserSysErrorConstants;
+import com.fast.springcloud.consumer.dto.ResponseBase;
+import com.fast.springcloud.consumer.dto.UserSysReq;
+import com.fast.springcloud.consumer.dto.UserSysRsp;
 import com.fast.springcloud.consumer.dto.request.UserInfoReq;
 import com.fast.springcloud.consumer.dto.response.UserInfoListRsp;
 import com.fast.springcloud.consumer.dto.response.UserInfoRsp;
 import com.fast.springcloud.consumer.exception.ApiBizException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,18 +32,15 @@ import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import feign.FeignException;
+import feign.Request;
 import feign.RequestTemplate;
 import feign.Response;
-import feign.codec.DecodeException;
+import feign.Retryer;
 import feign.codec.EncodeException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,11 +60,52 @@ public interface UserServiceClient {
     )
     UserInfoListRsp queryUserListInfo(@RequestBody UserInfoReq userInfoReq);
 
+    @RequestMapping(
+            value = "/user-info-list", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    List<UserInfoRsp> queryUserListInfo2(@RequestBody UserInfoReq userInfoReq);
+
     /**
      * client自定义配置.
      */
     @Slf4j
     class ClientConfiguration {
+        @Value("${userService.feign.request.connect.timeout.millis:10000}")
+        private int connectTimeoutMillis;// 链接超时时间
+        @Value("${userService.feign.request.read.timeout.millis:5000}")
+        private int readTimeoutMillis;//请求处理时间
+        @Value("${userService.feign.request.retry.period:5000}")
+        private int retryPeriod;//重试间隔
+        @Value("${userService.feign.request.retry.max.period:10000}")
+        private int retryMaxPeriod;//最大重试间隔
+        @Value("${userService.feign.request.retry.max.attempts:1}")
+        private int retryMaxAttempts;//最大重试次数
+
+        @Bean
+        public Request.Options feignOptions() {
+            // timeout设置
+            return new Request.Options(connectTimeoutMillis, readTimeoutMillis);
+        }
+
+        @Bean
+        public Retryer feignRetryer() {
+            // 重试次数配置
+            return new Retryer.Default(retryPeriod, retryMaxPeriod, retryMaxAttempts);
+        }
+
+        /**
+         * 日志级别
+         * 1. NONE : 不记录任何日志(默认)
+         * 2. BASIC : 仅记录请求方法,url,响应状态码和执行时间
+         * 3. HEADERS : 在basic的基础上,记录请求和响应的header
+         * 4. FULL : 记录请求响应的header,body和元数据
+         */
+        @Bean
+        feign.Logger.Level feignLoggerLevel() {
+            return feign.Logger.Level.FULL;
+        }
+
         @Autowired
         private ObjectFactory<HttpMessageConverters> messageConverters;
 
@@ -80,16 +122,10 @@ public interface UserServiceClient {
             @Override
             public void encode(Object requestBody, Type bodyType, RequestTemplate request) throws EncodeException {
                 // 设置公共请求报文头
-                ReqBase reqBase = (ReqBase) requestBody;
-                reqBase.setFromSystem("spring-boot-cloud-consumer");
-                reqBase.setSerialId(UUID.randomUUID().toString());
-                reqBase.setTimestamp(Instant.now().toEpochMilli());
-
-                try {
-                    log.info("userService request -> requestBody:{}", new ObjectMapper().writeValueAsString(requestBody));
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
+                UserSysReq userSysReq = (UserSysReq) requestBody;
+                userSysReq.setFromSystem("spring-boot-cloud-consumer");
+                userSysReq.setSerialId(UUID.randomUUID().toString());
+                userSysReq.setTimestamp(Instant.now().toEpochMilli());
                 super.encode(requestBody, bodyType, request);
             }
         }
@@ -100,6 +136,8 @@ public interface UserServiceClient {
         }
 
         private static class UserServiceDecoder extends CommonDecoder {
+            private static final String USER_SERVICE_SUCCESS_CODE = "0";
+
             @Override
             protected String getDataKey() {
                 return "list";
@@ -110,43 +148,65 @@ public interface UserServiceClient {
             }
 
             @Override
-            public Object decode(Response response, Type type) throws IOException, DecodeException, FeignException {
-                RspBase baseResp = (RspBase) super.decode(response, RspBase.class);
-                log.info("userService response -> baseResp:{}", mapper.writeValueAsString(baseResp));
+            public Object decode(Response response, Type returnType) throws IOException, FeignException {
+                UserSysRsp userSysRsp = (UserSysRsp) super.decode(response, UserSysRsp.class);
+                printLog(response, userSysRsp);
 
-                if (baseResp == null || baseResp.getCode() == null || baseResp.getCode() != 0) {
+                if (userSysRsp == null || userSysRsp.getCode() == null) {
                     throw new ApiBizException("接口访问错误");
                 }
 
-                if (type instanceof ParameterizedType) {
+                ResponseBase responseBase;
+                if (returnType instanceof ParameterizedType) {
                     // 将data里面的数据转换："data":{ "list":[ beanObj1, beanObj2] } -> List<bean>
-                    LinkedHashMap<String, Object> items = (LinkedHashMap<String, Object>) baseResp.getData();
-                    return convertGenericList((ParameterizedType) type, items);
+                    LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) userSysRsp.getData();
+                    responseBase = (ResponseBase) convertGenericList((ParameterizedType) returnType, dataMap);
                 } else {
                     // 将data里面的数据转换成bean
-                    return mapper.convertValue(baseResp.getData(), mapper.constructType(type));
+                    responseBase = mapper.convertValue(userSysRsp.getData(), mapper.constructType(returnType));
+                }
+
+                responseBase = ensureInstance(responseBase, returnType);
+
+                if (USER_SERVICE_SUCCESS_CODE.equals(userSysRsp.getCode())) {
+                    responseBase.setBusinessError(UserSysErrorConstants.BIZ_SUCCESS);
+                } else {
+                    responseBase.setBusinessError(responseBase.getErrorMap().get(userSysRsp.getCode()));
+                }
+                return responseBase;
+            }
+
+            private ResponseBase ensureInstance(ResponseBase response, Type returnType) {
+                if (response == null) {
+                    try {
+                        response = (ResponseBase) ReflectUtils.newInstance(Class.forName(returnType.getTypeName()));
+                    } catch (Exception ex) {
+                        throw new ApiBizException("创建对象实例错误", ex);
+                    }
+                }
+                return response;
+            }
+
+            private void printLog(Response response, UserSysRsp userSysRsp) {
+                StringBuilder logBuilder = new StringBuilder();
+                logBuilder.append("\n======================请求响应参数======================");
+                logBuilder.append("\nrequestUrl: ").append(response.request().url());
+                logBuilder.append("\nrequestParam: ").append(getRequestParam(response));
+
+                try {
+                    logBuilder.append("\nresponseData : ").append(mapper.writeValueAsString(userSysRsp));
+                    log.info("UserServiceClient -> {}", logBuilder.toString());
+                } catch (JsonProcessingException e) {
+                    log.error("UserServiceClient调用http接口异常！", e);
                 }
             }
-        }
 
-        /**
-         * 构造header.
-         *
-         * @param headerMap map
-         * @return Map
-         */
-        private static Map<String, Collection<String>> buildHeader(Map<String, String> headerMap) {
-            Map<String, Collection<String>> map = new HashMap<>();
-            if (MapUtils.isEmpty(headerMap)) {
-                return map;
+            private String getRequestParam(Response response) {
+                if (HttpMethod.GET.name().equals(response.request().method())) {
+                    return StringUtils.EMPTY;
+                }
+                return new String(response.request().body());
             }
-
-            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
-                List<String> list = new ArrayList<>(1);
-                list.add(entry.getValue());
-                map.put(entry.getKey(), list);
-            }
-            return map;
         }
     }
 }

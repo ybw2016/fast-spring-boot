@@ -33,8 +33,4 @@ public class BaseRsp<T> implements Serializable {
     public static BaseRsp fail(String code, String message) {
         return new BaseRsp(code, message, null);
     }
-
-    public boolean success() {
-        return SUCCESS_CODE.equals(code);
-    }
 }
