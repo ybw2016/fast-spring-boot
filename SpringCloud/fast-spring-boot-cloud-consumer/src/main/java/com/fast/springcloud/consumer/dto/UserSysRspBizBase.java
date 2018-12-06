@@ -12,7 +12,7 @@ import lombok.Data;
  * @date 2018-12-03
  */
 @Data
-public class ResponseBase implements BizErrorMapping {
+public class UserSysRspBizBase implements BizErrorMapping {
     private String rawErrorCode;
     private String rawErrorMsg;
     private BusinessError businessError;

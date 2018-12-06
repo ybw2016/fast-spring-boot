@@ -1,5 +1,7 @@
 package com.fast.springcloud.consumer.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -15,4 +17,9 @@ public class UserSysReq {
     private Long timestamp;
     private Integer pageNo;
     private Integer pageSize;
+
+    @JsonProperty("trans_id")
+    public String getTransId() {
+        return serialId;
+    }
 }

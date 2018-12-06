@@ -1,9 +1,9 @@
 package com.fast.springcloud.consumer.api;
 
 import com.fast.springcloud.consumer.constant.UserSysErrorConstants;
-import com.fast.springcloud.consumer.dto.ResponseBase;
 import com.fast.springcloud.consumer.dto.UserSysReq;
 import com.fast.springcloud.consumer.dto.UserSysRsp;
+import com.fast.springcloud.consumer.dto.UserSysRspBizBase;
 import com.fast.springcloud.consumer.dto.request.UserInfoReq;
 import com.fast.springcloud.consumer.dto.response.UserInfoListRsp;
 import com.fast.springcloud.consumer.dto.response.UserInfoRsp;
@@ -20,7 +20,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +44,6 @@ import feign.codec.EncodeException;
 import lombok.extern.slf4j.Slf4j;
 
 //@Lazy
-@Lazy
 @FeignClient(name = "${userService.url}/user", configuration = UserServiceClient.ClientConfiguration.class)
 public interface UserServiceClient {
     @RequestMapping(
@@ -60,6 +58,8 @@ public interface UserServiceClient {
     )
     UserInfoListRsp queryUserListInfo(@RequestBody UserInfoReq userInfoReq);
 
+    // 此接口返回对象为：List<UserInfoRsp>，没有实现UserSysRspBase基类，因此无法自动翻译错误码
+    @Deprecated
     @RequestMapping(
             value = "/user-info-list", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE
@@ -157,34 +157,34 @@ public interface UserServiceClient {
                     throw new ApiBizException("接口访问错误");
                 }
 
-                ResponseBase responseBase;
+                UserSysRspBizBase userSysRspBizBase;
                 if (returnType instanceof ParameterizedType) {
                     // 将data里面的数据转换："data":{ "list":[ beanObj1, beanObj2] } -> List<bean>
                     LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) userSysRsp.getData();
-                    responseBase = (ResponseBase) convertGenericList((ParameterizedType) returnType, dataMap);
+                    userSysRspBizBase = (UserSysRspBizBase) convertGenericList((ParameterizedType) returnType, dataMap);
                 } else {
                     // 将data里面的数据转换成bean
-                    responseBase = mapper.convertValue(userSysRsp.getData(), mapper.constructType(returnType));
+                    userSysRspBizBase = mapper.convertValue(userSysRsp.getData(), mapper.constructType(returnType));
                 }
 
-                responseBase = ensureInstance(responseBase, returnType);
+                userSysRspBizBase = ensureInstance(userSysRspBizBase, returnType);
                 // 绑定原始返回错误码
-                responseBase.setRawErrorCode(userSysRsp.getCode());
-                responseBase.setRawErrorMsg(userSysRsp.getMsg());
+                userSysRspBizBase.setRawErrorCode(userSysRsp.getCode());
+                userSysRspBizBase.setRawErrorMsg(userSysRsp.getMsg());
 
                 // 绑定自定义错误码
                 if (USER_SERVICE_SUCCESS_CODE.equals(userSysRsp.getCode())) {
-                    responseBase.setBusinessError(UserSysErrorConstants.BIZ_SUCCESS);
+                    userSysRspBizBase.setBusinessError(UserSysErrorConstants.BIZ_SUCCESS);
                 } else {
-                    responseBase.setBusinessError(responseBase.getErrorMap().get(userSysRsp.getCode()));
+                    userSysRspBizBase.setBusinessError(userSysRspBizBase.getErrorMap().get(userSysRsp.getCode()));
                 }
-                return responseBase;
+                return userSysRspBizBase;
             }
 
-            private ResponseBase ensureInstance(ResponseBase response, Type returnType) {
+            private UserSysRspBizBase ensureInstance(UserSysRspBizBase response, Type returnType) {
                 if (response == null) {
                     try {
-                        response = (ResponseBase) ReflectUtils.newInstance(Class.forName(returnType.getTypeName()));
+                        response = (UserSysRspBizBase) ReflectUtils.newInstance(Class.forName(returnType.getTypeName()));
                     } catch (Exception ex) {
                         throw new ApiBizException("创建对象实例错误", ex);
                     }

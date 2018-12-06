@@ -52,24 +52,23 @@ public class ApiBizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                     String query = StringUtils.isNotBlank(uri.getQuery()) ? "?" + uri.getQuery() : StringUtils.EMPTY;
                     return path + query;
                 }).orElse(StringUtils.EMPTY);
-        builder.append("调用地址").append(" : ").append(url).append("\n");
-        builder.append("调用方法").append(" : ").append(methodPath).append("\n");
+        builder.append("\n调用地址: ").append(url);
+        builder.append("\n调用方法: ").append(methodPath);
+        builder.append("\nheaders: ");
 
         HttpHeaders headers = serverHttpRequest.getHeaders();
         for (String headerKey : headers.keySet()) {
             builder.append(headerKey).append(":").append(headers.get(headerKey)).append(" ; ");
         }
 
-        String jsonString = StringUtils.EMPTY;
-
         if (result != null) {
             try {
-                jsonString = mapper.writeValueAsString(result);
+                String jsonString = mapper.writeValueAsString(result);
+                builder.append("\n返回数据:\n").append(jsonString);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }
-        builder.append("\n返回数据:\n").append(jsonString);
         log.info(builder.toString());
     }
 }
