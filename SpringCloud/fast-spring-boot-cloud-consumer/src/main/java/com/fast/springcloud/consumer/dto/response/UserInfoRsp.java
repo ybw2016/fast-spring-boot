@@ -26,6 +26,7 @@ public class UserInfoRsp extends ResponseBase {
             {
                 put("5293", UserSysErrorConstants.PAGE_NO_SIZE_INVALID_ERROR);
                 put("6288", UserSysErrorConstants.PAGE_EXCEED_MAX_ERROR);
+                put("6299", UserSysErrorConstants.USER_NOT_EXIST_ERROR);
             }
         };
     }

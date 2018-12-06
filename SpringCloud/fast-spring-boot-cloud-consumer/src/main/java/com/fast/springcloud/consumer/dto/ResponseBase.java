@@ -13,6 +13,8 @@ import lombok.Data;
  */
 @Data
 public class ResponseBase implements BizErrorMapping {
+    private String rawErrorCode;
+    private String rawErrorMsg;
     private BusinessError businessError;
 
     public boolean success() {

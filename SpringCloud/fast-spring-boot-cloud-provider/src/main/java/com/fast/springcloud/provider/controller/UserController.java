@@ -75,6 +75,9 @@ public class UserController {
         }
         Stream<UserQueryRsp> users = USER_MAP.values().stream();
         if (StringUtils.isNotEmpty(userQueryReq.getUsername())) {
+            if (USER_MAP.values().stream().noneMatch(user -> userQueryReq.getUsername().equals(user.getUsername()))) {
+                throw new ApiBizException("6299", "用户不存在");
+            }
             users = users.filter(user -> userQueryReq.getUsername().equals(user.getUsername()));
         }
         return users.skip(userQueryReq.getPageNo() - 1)

@@ -149,6 +149,7 @@ public interface UserServiceClient {
 
             @Override
             public Object decode(Response response, Type returnType) throws IOException, FeignException {
+                // 基础对象接收json值
                 UserSysRsp userSysRsp = (UserSysRsp) super.decode(response, UserSysRsp.class);
                 printLog(response, userSysRsp);
 
@@ -167,7 +168,11 @@ public interface UserServiceClient {
                 }
 
                 responseBase = ensureInstance(responseBase, returnType);
+                // 绑定原始返回错误码
+                responseBase.setRawErrorCode(userSysRsp.getCode());
+                responseBase.setRawErrorMsg(userSysRsp.getMsg());
 
+                // 绑定自定义错误码
                 if (USER_SERVICE_SUCCESS_CODE.equals(userSysRsp.getCode())) {
                     responseBase.setBusinessError(UserSysErrorConstants.BIZ_SUCCESS);
                 } else {

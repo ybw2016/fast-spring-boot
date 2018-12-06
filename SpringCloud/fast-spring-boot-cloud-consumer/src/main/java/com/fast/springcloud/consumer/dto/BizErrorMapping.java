@@ -12,6 +12,10 @@ import java.util.Map;
  * @date 2018-12-05
  */
 public interface BizErrorMapping {
+    String getRawErrorCode();
+
+    String getRawErrorMsg();
+
     @JsonIgnore
     default Map<String, BusinessError> getErrorMap() {
         return Maps.newHashMap();
