@@ -14,13 +14,15 @@ import java.util.Map;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface BizErrorMapping {
+    Map<String, BusinessError> ERROR_MAP = Maps.newHashMap();
+
     String getRawErrorCode();
 
     String getRawErrorMsg();
 
     @JsonIgnore
     default Map<String, BusinessError> getErrorMap() {
-        return Maps.newHashMap();
+        return ERROR_MAP;
     }
 
     boolean success();
