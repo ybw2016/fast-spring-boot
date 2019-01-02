@@ -5,11 +5,9 @@ import com.fast.springboot.basic.annotation.DecryptPathVariable;
 import com.fast.springboot.basic.annotation.DecryptPostForm;
 import com.fast.springboot.basic.annotation.DecryptPostJsonForm;
 import com.fast.springboot.basic.annotation.DecryptRequestParam;
-import com.fast.springboot.basic.model.Address;
 import com.fast.springboot.basic.model.AddressFormJackson;
 import com.fast.springboot.basic.model.AddressJackson;
 import com.fast.springboot.basic.model.AddressJsonManualForm;
-import com.fast.springboot.basic.model.User;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,8 +39,9 @@ public class DecryptController {
      * "{\"userName\":\"emhhbmdzYW4=\",\"password\":\"123456\",\"mobile\":\"13811112222\",\"address\":{\"addressCode\":\"MTEwMDIy\",\"addressName\":\"北京海淀\"}}"
      */
     @RequestMapping("/decrypt")
-    public User decryptName(@DecryptRequestParam String username, @DecryptRequestParam String password, String mobile) {
-        return new User(username, password, mobile, new Address("110022", "北京海淀"));
+    public void decryptName(@DecryptRequestParam String username, @DecryptRequestParam String password, String mobile) {
+        // return new User(username, password, mobile, new Address("110022", "北京海淀"));
+        log.info("decryptName handle completed!");
     }
 
     /**

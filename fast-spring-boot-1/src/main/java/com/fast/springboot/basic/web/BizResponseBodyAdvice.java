@@ -1,6 +1,8 @@
 package com.fast.springboot.basic.web;
 
 import com.fast.springboot.basic.annotation.BizRestController;
+import com.fast.springboot.basic.model.EmptyObject;
+import com.fast.springboot.basic.model.Result;
 import com.fast.springboot.basic.util.JsonUtil;
 
 import org.springframework.core.MethodParameter;
@@ -22,17 +24,21 @@ import lombok.extern.slf4j.Slf4j;
 public class BizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return Object.class.isAssignableFrom(returnType.getMethod().getReturnType());
+//        return Object.class.isAssignableFrom(returnType.getMethod().getReturnType())
+//                || Void.class.isAssignableFrom(returnType.getMethod().getReturnType());
+        return true;
     }
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        String retData = null;
+        log.info("beforeBodyWrite enters!");
+        Object retData;
         if (body != null) {
-            retData = JsonUtil.toJsonString(body);
+            retData = Result.buildSuccess(JsonUtil.toJsonString(body));
             log.info("BizResponseBodyAdvice beforeBodyWrite -> retData：{}", retData);
+        } else {
+            retData = Result.buildSuccess(JsonUtil.toJsonString(new EmptyObject()));
         }
-        //return retData;
-        return body;
+        return retData;
     }
 }
