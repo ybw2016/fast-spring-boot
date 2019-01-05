@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试jsonp</title>
+</head>
+<body>
+<div id="mydiv">
+    <button id="btnQuery">点击能成功返回Ok</button>
+</div>
+</body>
+<script type="text/javascript">
+    function handleResponse(response) {
+        console.log(response);
+        // alert(getResult(response));
+    }
+
+    function getResult(response) {
+        var results;
+        for (var data in response) {
+            if (!data) {
+                return results;
+            }
+            if (typeof(data) =='string'
+                || data instanceof Number
+                || data instanceof Boolean
+                || data instanceof Boolean) {
+                results += ";" + data;
+            } else {
+                if (typeof(data) =='object') {
+                    alert(data);
+                    alert(typeof(data));
+                    results += getResult(data);
+                }
+            }
+        }
+        return results;
+    }
+
+</script>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var button = document.getElementById('btnQuery');
+        button.onclick = function () {
+            var script = document.createElement("script");
+            script.src = "https://api.douban.com/v2/book/search?q=javascript&count=1&callback=handleResponse";
+            document.body.insertBefore(script, document.body.firstChild);
+        };
+    };
+</script>
+</html>

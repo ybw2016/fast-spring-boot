@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试jsonp</title>
+</head>
+<body>
+<div id="mydiv">
+    <button id="btn">点击</button>
+</div>
+</body>
+
+<script type="text/javascript">
+    window.onload = function () {
+
+        var oBtn = document.getElementById('btn');
+
+        oBtn.onclick = function () {
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    alert(xhr.responseText);
+                }
+            };
+
+            xhr.open('get', 'https://api.douban.com/v2/book/search?q=javascript&count=1', true);
+            xhr.send();
+        };
+
+    };
+</script>
+</html>

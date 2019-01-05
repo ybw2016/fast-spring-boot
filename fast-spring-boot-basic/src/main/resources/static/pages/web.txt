@@ -1,0 +1,8 @@
+启动后直接访问地址：
+http://127.0.0.1:8080/pages/jsonp_jQuery.html
+
+Springboot返回静态资源：https://blog.csdn.net/u012882134/article/details/77230900/
+    1. Thymeleaf模板模式;
+    2. 返回纯静态的html;
+    3. 非controller模式;
+    4. controller模式;
