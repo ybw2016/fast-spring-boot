@@ -34,9 +34,11 @@ public class BizResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         log.info("beforeBodyWrite enters!");
         Object retData;
         if (body != null) {
+            // rest有返回类型
             retData = Result.buildSuccess(JsonUtil.toJsonString(body));
             log.info("BizResponseBodyAdvice beforeBodyWrite -> retData：{}", retData);
         } else {
+            // rest方法为void类型
             retData = Result.buildSuccess(JsonUtil.toJsonString(new EmptyObject()));
         }
         return retData;
