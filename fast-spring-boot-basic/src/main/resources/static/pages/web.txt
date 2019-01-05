@@ -1,6 +1,9 @@
 启动后直接访问地址：
 http://127.0.0.1:8080/pages/jsonp_jQuery.html
 
+jsonp跨域原理：https://www.cnblogs.com/think-in-java/p/7285296.html?utm_source=itdadao&utm_medium=referral
+利用<img>的src（获取图片），<link>的href（获取css），<script>的src（获取javascript）这三个都不符合同源策略，它们可以跨域获取数据。
+
 Springboot返回静态资源：https://blog.csdn.net/u012882134/article/details/77230900/
     1. Thymeleaf模板模式;
     2. 返回纯静态的html;
