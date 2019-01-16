@@ -12,13 +12,20 @@ import java.io.PrintStream;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 从mysql数据库表中提取并合并到一个文件中
+ * 说明 ：使用数据库工具将建表语句导出时，会生成以数据库表命名的文件，如:tableName.sql，多个文件中不便于合并
+ * 从工具的作用是：从多个文件中提取有效的sql文件，并合并成一个文件
+ *
+ * 备注：当导出的文件中特殊语法太多时，也可以修改数据库工具设置，从而使导出的sql文件很干净。
+ *
  * @author bowen.yan
  * @date 2019-01-02
  */
 @Slf4j
 public class ExtractorSqlFromFiles {
-    private static final String RAW_FILE_DIR = "/Users/tim/Documents/fm_sqls";
-    private static final String NEW_SQL_FILE_PATH = "/Users/tim/Documents/fm_all_tables.sql";
+    private static final String RAW_FILE_DIR = "/Users/tim/Documents/db_schema/";
+    private static final String NEW_SQL_FILE_PATH = "/Users/tim/Documents/db_all_tables.sql";
+    private static final boolean INCLUDE_INSERT_SQLS = false;
 
     public static void main(String[] args) {
         File file = new File(RAW_FILE_DIR);
@@ -26,6 +33,7 @@ public class ExtractorSqlFromFiles {
             log.error("目录不存在");
             return;
         }
+
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -40,6 +48,13 @@ public class ExtractorSqlFromFiles {
         }
 
         File sqlFile = new File(NEW_SQL_FILE_PATH);
+        if (sqlFile.exists()) {
+            try {
+                sqlFile.delete();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
         try (PrintStream printStream = new PrintStream(new FileOutputStream(sqlFile))) {
             printStream.println(stringBuilder.toString());
         } catch (FileNotFoundException e) {
@@ -60,11 +75,16 @@ public class ExtractorSqlFromFiles {
                 if (strLine.startsWith("DROP TABLE")) {
                     createTableStarts = true;
                 }
+                if (!INCLUDE_INSERT_SQLS && strLine.contains("ENGINE=InnoDB")) {
+                    //String currLine = strLine.substring(0, strLine.indexOf(";"));
+                    appendLine(stringBuilder, strLine);
+                    break;
+                }
                 if (strLine.contains("Dumping data for table")) {
                     break;
                 }
                 if (createTableStarts) {
-                    stringBuilder.append(strLine).append(System.getProperty("line.separator"));
+                    appendLine(stringBuilder, strLine);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -73,5 +93,9 @@ public class ExtractorSqlFromFiles {
             e.printStackTrace();
         }
         return stringBuilder.toString();
+    }
+
+    private static void appendLine(StringBuilder stringBuilder, String sqlLine) {
+        stringBuilder.append(sqlLine).append(System.getProperty("line.separator"));
     }
 }
