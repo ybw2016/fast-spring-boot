@@ -24,30 +24,20 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
  * @date 2019-01-02
  */
 @Slf4j
-public class ExtractorSqlFromFiles {
-    private static final String RAW_FILE_DIR = USER_WORK_DIR + "db_schema/";
-    private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables.sql";
-    private static final boolean INCLUDE_INSERT_SQLS = true;
+public class RefreshSqlFile {
+    private static final String RAW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables.sql";
+    private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_New.sql";
 
     public static void main(String[] args) {
-        File file = new File(RAW_FILE_DIR);
+        File file = new File(RAW_SQL_FILE_PATH);
         if (!file.exists()) {
             log.error("目录不存在");
             return;
         }
 
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (File currFile : file.listFiles()) {
-            if (!currFile.getName().endsWith(".sql")) {
-                continue;
-            }
-
-            log.info("filePath -> {}", currFile.getPath());
-            String fileContent = readToString(currFile.getPath());
-            stringBuilder.append(fileContent).append(System.getProperty("line.separator"));
-        }
+        StringBuilder createSb = new StringBuilder();
+        StringBuilder insertSb = new StringBuilder();
+        readToString(file.getPath(), createSb, insertSb);
 
         File sqlFile = new File(NEW_SQL_FILE_PATH);
         if (sqlFile.exists()) {
@@ -58,43 +48,29 @@ public class ExtractorSqlFromFiles {
             }
         }
         try (PrintStream printStream = new PrintStream(new FileOutputStream(sqlFile))) {
-            printStream.println(stringBuilder.toString());
+            printStream.println(createSb.toString());
+            printStream.println(insertSb.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private static String readToString(String filePath) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private static void readToString(String filePath, StringBuilder createSb, StringBuilder insertSb) {
         File file = new File(filePath);
         String strLine;
 
-        boolean createTableStarts = false;
         try (FileInputStream fileInputStream = new FileInputStream(file);
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             while ((strLine = bufferedReader.readLine()) != null) {
-                if (strLine.startsWith("DROP TABLE")) {
-                    createTableStarts = true;
-                }
-                if (!INCLUDE_INSERT_SQLS && strLine.contains("ENGINE=InnoDB")) {
-                    //String currLine = strLine.substring(0, strLine.indexOf(";"));
-                    appendLine(stringBuilder, strLine);
-                    break;
-                } else {
-                    if (strLine.startsWith("INSERT INTO")) {
-                        appendLine(stringBuilder, strLine);
-                        break;
-                    }
-                }
-                if (strLine.startsWith("SET @@SESSION")) {
+                // 滤掉无用行
+                if (strLine.startsWith("/*!40")) {
                     continue;
                 }
-//                if (strLine.contains("Dumping data for table")) {
-//                    break;
-//                }
-                if (createTableStarts) {
-                    appendLine(stringBuilder, strLine);
+                if (strLine.toLowerCase().contains("insert into")) {
+                    appendLine(insertSb, strLine);
+                } else {
+                    appendLine(createSb, strLine);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -102,7 +78,6 @@ public class ExtractorSqlFromFiles {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return stringBuilder.toString();
     }
 
     private static void appendLine(StringBuilder stringBuilder, String sqlLine) {
