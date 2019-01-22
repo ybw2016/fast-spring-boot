@@ -1,5 +1,7 @@
 package com.fast.springboot.basic.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,12 +71,20 @@ public class RefreshSqlFile {
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             while ((strLine = bufferedReader.readLine()) != null) {
                 // 滤掉无用行
-                if (strLine.startsWith("/*!40")) {
+                if (strLine.startsWith("/*!40")
+                        || strLine.startsWith("--")) {
                     continue;
                 }
                 if (strLine.toLowerCase().contains("insert into")) {
                     appendLine(insertSb, strLine);
                 } else {
+                    if (strLine.trim().equals(StringUtils.EMPTY)) {
+                        continue;
+                    }
+                    // drop table 换行
+                    if (strLine.contains("DROP TABLE")) {
+                        appendLine(createSb, "");
+                    }
                     appendLine(createSb, strLine);
                 }
             }

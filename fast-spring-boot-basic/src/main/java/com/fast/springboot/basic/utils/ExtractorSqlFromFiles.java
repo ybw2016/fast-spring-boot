@@ -94,7 +94,10 @@ public class ExtractorSqlFromFiles {
                         break;
                     }
                 }
-                if (strLine.startsWith("SET @@SESSION")) {
+                if (strLine.startsWith("SET @@SESSION")
+                        || strLine.startsWith("LOCK TABLES")
+                        || strLine.startsWith("UNLOCK TABLES")
+                        ) {
                     continue;
                 }
 //                if (strLine.contains("Dumping data for table")) {
