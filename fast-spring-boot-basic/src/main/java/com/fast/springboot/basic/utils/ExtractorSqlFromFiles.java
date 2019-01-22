@@ -27,9 +27,11 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
 public class ExtractorSqlFromFiles {
     private static final String RAW_FILE_DIR = USER_WORK_DIR + "db_schema/";
     private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables.sql";
+    private static final String REFRESH_NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_New.sql";
     private static final boolean INCLUDE_INSERT_SQLS = true;
 
     public static void main(String[] args) {
+        // 1. 合并多个.sql并写入到StringBuilder
         File file = new File(RAW_FILE_DIR);
         if (!file.exists()) {
             log.error("目录不存在");
@@ -49,6 +51,7 @@ public class ExtractorSqlFromFiles {
             stringBuilder.append(fileContent).append(System.getProperty("line.separator"));
         }
 
+        // 2. 从StringBuilder写入到一个文件
         File sqlFile = new File(NEW_SQL_FILE_PATH);
         if (sqlFile.exists()) {
             try {
@@ -62,6 +65,10 @@ public class ExtractorSqlFromFiles {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        // 3. 清洗一个文件
+        RefreshSqlFile.refreshFile(NEW_SQL_FILE_PATH, REFRESH_NEW_SQL_FILE_PATH);
+        log.info("清洗完成！");
     }
 
     private static String readToString(String filePath) {

@@ -29,7 +29,11 @@ public class RefreshSqlFile {
     private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_New.sql";
 
     public static void main(String[] args) {
-        File file = new File(RAW_SQL_FILE_PATH);
+        refreshFile(RAW_SQL_FILE_PATH, NEW_SQL_FILE_PATH);
+    }
+
+    public static void refreshFile(String rawFilePath, String refreshedFilePath) {
+        File file = new File(rawFilePath);
         if (!file.exists()) {
             log.error("目录不存在");
             return;
@@ -39,7 +43,7 @@ public class RefreshSqlFile {
         StringBuilder insertSb = new StringBuilder();
         readToString(file.getPath(), createSb, insertSb);
 
-        File sqlFile = new File(NEW_SQL_FILE_PATH);
+        File sqlFile = new File(refreshedFilePath);
         if (sqlFile.exists()) {
             try {
                 sqlFile.delete();
@@ -54,6 +58,7 @@ public class RefreshSqlFile {
             e.printStackTrace();
         }
     }
+
 
     private static void readToString(String filePath, StringBuilder createSb, StringBuilder insertSb) {
         File file = new File(filePath);
