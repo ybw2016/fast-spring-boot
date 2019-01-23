@@ -25,7 +25,7 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
  */
 @Slf4j
 public class ExtractorSqlFromFiles {
-    private static final String RAW_FILE_DIR = USER_WORK_DIR + "db_schema/";
+    private static final String RAW_FILE_DIR = USER_WORK_DIR + "db_export/";
     private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables.sql";
     private static final String REFRESH_NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_New.sql";
     private static final boolean INCLUDE_INSERT_SQLS = true;
