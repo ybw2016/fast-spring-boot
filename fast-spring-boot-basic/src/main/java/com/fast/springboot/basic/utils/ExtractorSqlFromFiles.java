@@ -41,14 +41,18 @@ public class ExtractorSqlFromFiles {
 
         StringBuilder stringBuilder = new StringBuilder();
 
+        int exported = 0;
+        StringBuilder ignoreStringBuilder = new StringBuilder();
         for (File currFile : file.listFiles()) {
             if (!currFile.getName().endsWith(".sql")) {
+                appendLine(ignoreStringBuilder, currFile.getName());
                 continue;
             }
 
             log.info("filePath -> {}", currFile.getPath());
             String fileContent = readToString(currFile.getPath());
             stringBuilder.append(fileContent).append(System.getProperty("line.separator"));
+            exported++;
         }
 
         // 2. 从StringBuilder写入到一个文件
@@ -68,7 +72,8 @@ public class ExtractorSqlFromFiles {
 
         // 3. 清洗一个文件
         RefreshSqlFile.refreshFile(NEW_SQL_FILE_PATH, REFRESH_NEW_SQL_FILE_PATH);
-        log.info("清洗完成！");
+        log.info("清洗完成！-> 总共:{}个，导出{}个", file.listFiles().length, exported);
+        log.info("忽略文件如下：{}", ignoreStringBuilder.toString());
     }
 
     private static String readToString(String filePath) {
