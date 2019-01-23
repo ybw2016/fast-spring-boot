@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.Map;
+import java.util.TreeMap;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,8 +40,7 @@ public class ExtractorSqlFromFiles {
             return;
         }
 
-
-        StringBuilder stringBuilder = new StringBuilder();
+        Map<String, String> sqlFileMap = new TreeMap<>();
 
         int exported = 0;
         StringBuilder ignoreStringBuilder = new StringBuilder();
@@ -51,11 +52,11 @@ public class ExtractorSqlFromFiles {
 
             log.info("filePath -> {}", currFile.getPath());
             String fileContent = readToString(currFile.getPath());
-            stringBuilder.append(fileContent).append(System.getProperty("line.separator"));
+            sqlFileMap.put(currFile.getName(), fileContent);
             exported++;
         }
 
-        // 2. 从StringBuilder写入到一个文件
+        // 2. 从sqlFileMap写入到一个文件
         File sqlFile = new File(NEW_SQL_FILE_PATH);
         if (sqlFile.exists()) {
             try {
@@ -65,7 +66,10 @@ public class ExtractorSqlFromFiles {
             }
         }
         try (PrintStream printStream = new PrintStream(new FileOutputStream(sqlFile))) {
-            printStream.println(stringBuilder.toString());
+            sqlFileMap.forEach((fileName, sqlFileContent) -> {
+                printStream.println(sqlFileContent);
+                printStream.println(System.getProperty("line.separator"));
+            });
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
