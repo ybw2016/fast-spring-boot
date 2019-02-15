@@ -13,6 +13,7 @@
         <module>fast-spring-boot-1</module>
         <module>fast-spring-boot-basic</module>
         <module>fast-spring-boot-rxjava</module>
+        <module>fast-spring-boot-redis</module>
         <module>MQ/fast-spring-boot-kafka</module>
         <module>SpringCloud/fast-spring-boot-cloud-server</module>
         <module>SpringCloud/fast-spring-boot-cloud-provider</module>
