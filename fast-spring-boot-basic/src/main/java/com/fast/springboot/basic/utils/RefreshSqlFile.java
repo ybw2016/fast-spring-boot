@@ -30,11 +30,11 @@ public class RefreshSqlFile {
     private static final String RAW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables.sql";
     private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_New.sql";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         refreshFile(RAW_SQL_FILE_PATH, NEW_SQL_FILE_PATH);
     }
 
-    public static void refreshFile(String rawFilePath, String refreshedFilePath) {
+    public static void refreshFile(String rawFilePath, String refreshedFilePath) throws FileNotFoundException {
         File file = new File(rawFilePath);
         if (!file.exists()) {
             log.error("目录不存在");
@@ -56,8 +56,6 @@ public class RefreshSqlFile {
         try (PrintStream printStream = new PrintStream(new FileOutputStream(sqlFile))) {
             printStream.println(createSb.toString());
             printStream.println(insertSb.toString());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
     }
 

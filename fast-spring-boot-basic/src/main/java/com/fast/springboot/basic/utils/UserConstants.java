@@ -5,5 +5,5 @@ package com.fast.springboot.basic.utils;
  * @date 2019-01-21
  */
 public class UserConstants {
-    public static final String USER_WORK_DIR = "/Users/ybw/Documents/";
+    public static final String USER_WORK_DIR = "/Users/ybw/Documents/sqls/";
 }

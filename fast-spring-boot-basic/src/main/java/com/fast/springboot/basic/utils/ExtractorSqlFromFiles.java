@@ -28,11 +28,12 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
 @Slf4j
 public class ExtractorSqlFromFiles {
     private static final String RAW_FILE_DIR = USER_WORK_DIR + "db_export/";
-    private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables.sql";
-    private static final String REFRESH_NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_New.sql";
+    private static final String RAW_FILE_DIR_BAK = USER_WORK_DIR + "db_export_bak/";
+    private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_raw.sql";
+    private static final String REFRESH_NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_NEW.sql";
     private static final boolean INCLUDE_INSERT_SQLS = true;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // 1. 合并多个.sql并写入到StringBuilder
         File file = new File(RAW_FILE_DIR);
         if (!file.exists()) {
@@ -58,26 +59,29 @@ public class ExtractorSqlFromFiles {
 
         // 2. 从sqlFileMap写入到一个文件
         File sqlFile = new File(NEW_SQL_FILE_PATH);
-        if (sqlFile.exists()) {
-            try {
-                sqlFile.delete();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        sqlFile.delete();
         try (PrintStream printStream = new PrintStream(new FileOutputStream(sqlFile))) {
             sqlFileMap.forEach((fileName, sqlFileContent) -> {
                 printStream.println(sqlFileContent);
                 printStream.println(System.getProperty("line.separator"));
             });
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
 
         // 3. 清洗一个文件
         RefreshSqlFile.refreshFile(NEW_SQL_FILE_PATH, REFRESH_NEW_SQL_FILE_PATH);
         log.info("清洗完成！-> 总共:{}个，导出{}个", file.listFiles().length, exported);
         log.info("忽略文件如下：{}", ignoreStringBuilder.toString());
+
+        // 备份原目录下的sql文件
+        FileHelper.copyDirectory(RAW_FILE_DIR, RAW_FILE_DIR_BAK);
+        log.info("原始sql文件备份完成！-> srcDir:{}, destDir:{}", RAW_FILE_DIR, RAW_FILE_DIR_BAK);
+
+        // 删除原目录下的sql文件
+        FileHelper.deleteDirectory(RAW_FILE_DIR);
+        log.info("原始sql文件删除完成！-> srcDir:{}", RAW_FILE_DIR);
+
+        // 创建原始目录，以便下次使用
+        FileHelper.ensureDirExists(RAW_FILE_DIR);
     }
 
     private static String readToString(String filePath) {
