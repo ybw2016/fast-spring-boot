@@ -2,7 +2,7 @@ package com.fast.springboot.basic.annotation;
 
 import com.fast.springboot.basic.annotation.model.Abc;
 import com.fast.springboot.basic.annotation.model.MyCondition;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -19,6 +19,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ConditionalAnnotation {
+    @Value("${abc.url: defaultVal}")
+    private String abcUrl;
+
     @Conditional(MyCondition.class)
     @Bean
     public String condition() {
@@ -83,10 +86,11 @@ public class ConditionalAnnotation {
     /**
      * 配置文件属性是否为true
      */
-    @ConditionalOnProperty(value = {"abc.url"}, matchIfMissing = false)
+    @ConditionalOnProperty(value = {"abc.url"}, havingValue = "AAA", matchIfMissing = false)
     @Bean
     public String propertyExist() {
-        System.err.println("ConditionalOnProperty -> property [abc.url] is existing in property file");
+//        System.err.println("ConditionalOnProperty -> property [abc.url] is existing in property file");
+        System.err.println("ConditionalOnProperty -> property abc.url -> [" + abcUrl + "]");
         return "";
     }
 
