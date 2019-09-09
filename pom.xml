@@ -19,7 +19,18 @@
         <module>SpringCloud/fast-spring-boot-cloud-provider</module>
         <module>SpringCloud/fast-spring-boot-cloud-consumer</module>
         <module>webflux</module>
+        <module>fast-spring-boot-tools</module>
     </modules>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <repositories>
         <repository>
