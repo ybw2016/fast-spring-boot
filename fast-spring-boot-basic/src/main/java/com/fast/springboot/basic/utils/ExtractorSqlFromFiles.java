@@ -1,5 +1,7 @@
 package com.fast.springboot.basic.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,8 +12,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.TreeMap;
-
-import lombok.extern.slf4j.Slf4j;
 
 import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
 
@@ -103,14 +103,16 @@ public class ExtractorSqlFromFiles {
                     break;
                 } else {
                     if (strLine.startsWith("INSERT INTO")) {
+                        createTableStarts = false;
                         appendLine(stringBuilder, strLine);
-                        break;
+                        //break;
                     }
                 }
                 if (strLine.startsWith("SET @@SESSION")
-                        || strLine.startsWith("LOCK TABLES")
-                        || strLine.startsWith("UNLOCK TABLES")
-                        ) {
+                    || strLine.startsWith("LOCK TABLES")
+                    || strLine.startsWith("UNLOCK TABLES")
+                    || strLine.startsWith("/*!40")
+                    ) {
                     continue;
                 }
 //                if (strLine.contains("Dumping data for table")) {
