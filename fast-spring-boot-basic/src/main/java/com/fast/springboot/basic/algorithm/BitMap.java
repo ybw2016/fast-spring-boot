@@ -1,5 +1,7 @@
 package com.fast.springboot.basic.algorithm;
 
+import java.util.stream.IntStream;
+
 /**
  * @author bowen.yan
  * @since 2019-12-31
@@ -18,50 +20,53 @@ public class BitMap {
         bits = new byte[(capacity >> 3) + 1];
     }
 
-    public void add(int num) {
+    public void add(int number) {
         // num/8得到byte[]的index
-        int arrayIndex = num >> 3;
+        int arrayIndex = number >> 3;
 
         // num%8得到在byte[index]的位置
-        int position = num & 0x07;
+        int position = number & 0x07;
 
         //将1左移position后，那个位置自然就是1，然后和以前的数据做|，这样，那个位置就替换成1了。
         bits[arrayIndex] |= 1 << position;
     }
 
-    public boolean contains(int num) {
+    public boolean contains(int number) {
         // num/8得到byte[]的index
-        int arrayIndex = num >> 3;
+        int arrayIndex = number >> 3;
 
         // num%8得到在byte[index]的位置
-        int position = num & 0x07;
+        int position = number & 0x07;
 
         //将1左移position后，那个位置自然就是1，然后和以前的数据做&，判断是否为0即可
         return (bits[arrayIndex] & (1 << position)) != 0;
     }
 
-    public void clear(int num) {
+    public void clear(int number) {
         // num/8得到byte[]的index
-        int arrayIndex = num >> 3;
+        int arrayIndex = number >> 3;
 
         // num%8得到在byte[index]的位置
-        int position = num & 0x07;
+        int position = number & 0x07;
 
         //将1左移position后，那个位置自然就是1，然后对取反，再与当前值做&，即可清除当前的位置了.
         bits[arrayIndex] &= ~(1 << position);
-
     }
 
     public static void main(String[] args) {
         BitMap bitmap = new BitMap(100);
-        bitmap.add(7);
-        System.out.println("插入7成功");
+        IntStream.rangeClosed(1, 100).forEach(num -> {
+            bitmap.add(num);
+            System.out.println(String.format("插入%s成功", num));
+        });
 
-        boolean isexsit = bitmap.contains(7);
-        System.out.println("7是否存在:" + isexsit);
+        IntStream.rangeClosed(1, 102).forEach(num -> {
+            boolean exist = bitmap.contains(num);
+            System.out.println(String.format("%s是否存在:%s", num, exist));
+        });
 
-        bitmap.clear(7);
-        isexsit = bitmap.contains(7);
-        System.out.println("7是否存在:" + isexsit);
+//        bitmap.clear(number);
+//        exist = bitmap.contains(number);
+//        System.out.println(String.format("%s是否存在:%s", number, exist));
     }
 }
