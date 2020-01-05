@@ -3,6 +3,7 @@ package com.fast.springboot.basic.algorithm;
 import java.util.stream.IntStream;
 
 /**
+ *  参考链接： https://www.jianshu.com/p/e530baada558
  * @author bowen.yan
  * @since 2019-12-31
  */
