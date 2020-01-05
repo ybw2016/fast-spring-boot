@@ -8,54 +8,58 @@ import java.util.stream.IntStream;
  */
 public class BitMapNew {
     private int capacity;
-    private int[] bitArr;
+    private long[] bitArr;
 
-    private static final int ARRAY_DATA_COUNT = 8;
+    private static final int ARRAY_DATA_COUNT = 64;
 
     public BitMapNew(int capacity) {
         this.capacity = capacity;
-        this.bitArr = new int[(capacity / ARRAY_DATA_COUNT) + 1];
+        this.bitArr = new long[(capacity / ARRAY_DATA_COUNT) + 1];
     }
 
     private int getArrayIndex(int number) {
         return number / ARRAY_DATA_COUNT;
     }
 
-    private int getByteIndex(int number) {
+    private long getByteIndex(int number) {
         // number = 9, ARRAY_DATA_COUNT = 8, 期望值：1
-        return number & (ARRAY_DATA_COUNT - 1);
+        //return number & (ARRAY_DATA_COUNT - 1);
+        return number % ARRAY_DATA_COUNT;
     }
 
     public void add(int number) {
         int arrayIndex = getArrayIndex(number); //向右移3位 = 除以8
-        int byteIndex = getByteIndex(number);
+        long byteIndex = getByteIndex(number);
         bitArr[arrayIndex] |= (1 << byteIndex);
     }
 
     public boolean contains(int number) {
         int arrayIndex = getArrayIndex(number);
-        int byteIndex = getByteIndex(number);
-        return (bitArr[arrayIndex] & (1 << byteIndex)) != 0;
+        long byteIndex = getByteIndex(number);
+        return ((bitArr[arrayIndex] >>> byteIndex) & 1) == 1;
+        //return (bitArr[arrayIndex] & (1 << byteIndex)) != 0;
     }
 
     public void clear(int number) {
         int arrayIndex = getArrayIndex(number);
-        int byteIndex = getByteIndex(number);
+        long byteIndex = getByteIndex(number);
         bitArr[arrayIndex] &= ~(1 << byteIndex);
     }
 
+    private static int SIZE = 100;
+
     public static void main(String[] args) {
-        BitMapNew bitMapNew = new BitMapNew(2000);
+        BitMapNew bitMapNew = new BitMapNew(SIZE);
         testAdd(bitMapNew);
         // testClear(bitMapNew);
     }
 
     private static void testAdd(BitMapNew bitMapNew) {
-        IntStream.rangeClosed(1, 200).forEach(data -> {
+        IntStream.rangeClosed(1, SIZE).forEach(data -> {
             bitMapNew.add(data);
         });
 
-        IntStream.rangeClosed(1, 203).forEach(data -> {
+        IntStream.rangeClosed(1, 103).forEach(data -> {
             boolean exist = bitMapNew.contains(data);
             System.out.println(String.format("%s exist: %s", data, exist));
         });

@@ -20,31 +20,17 @@ public class BitMapDemo {
     }
 
     public static void main(String[] args) {
-        BitMapNew bitMapNew = new BitMapNew(2000);
-        testAdd(bitMapNew);
-        // testClear(bitMapNew);
+        BitMapDemo bitMapDemo = new BitMapDemo(2000);
+        testAdd(bitMapDemo);
     }
 
-    private static void testAdd(BitMapNew bitMapNew) {
+    private static void testAdd(BitMapDemo bitMapDemo) {
         IntStream.rangeClosed(1, 1000).forEach(data -> {
-            bitMapNew.add(data);
+            bitMapDemo.add(data);
         });
 
         IntStream.rangeClosed(1, 1002).forEach(data -> {
-            boolean exist = bitMapNew.contains(data);
-            System.out.println(String.format("%s exist: %s", data, exist));
-        });
-
-        System.out.println();
-    }
-
-    private static void testClear(BitMapNew bitMapNew) {
-        IntStream.rangeClosed(1, 10).forEach(data -> {
-            bitMapNew.clear(data);
-        });
-
-        IntStream.rangeClosed(1, 12).forEach(data -> {
-            boolean exist = bitMapNew.contains(data);
+            boolean exist = bitMapDemo.contains(data);
             System.out.println(String.format("%s exist: %s", data, exist));
         });
 
