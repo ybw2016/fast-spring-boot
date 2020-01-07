@@ -3,16 +3,18 @@ package com.fast.springboot.basic.algorithm;
 import java.util.stream.IntStream;
 
 /**
+ * 64位存储时有问题，在number=31时会有溢出问题
+ *
  * @author bowen.yan
  * @since 2019-12-31
  */
-public class BitMapNew {
+public class BitMapNew64 {
     private int capacity;
     private long[] bitArr;
 
     private static final int ARRAY_DATA_COUNT = 64;
 
-    public BitMapNew(int capacity) {
+    public BitMapNew64(int capacity) {
         this.capacity = capacity;
         this.bitArr = new long[(capacity / ARRAY_DATA_COUNT) + 1];
     }
@@ -21,7 +23,7 @@ public class BitMapNew {
         return number / ARRAY_DATA_COUNT;
     }
 
-    private long getByteIndex(int number) {
+    private int getByteIndex(int number) {
         // number = 9, ARRAY_DATA_COUNT = 8, 期望值：1
         //return number & (ARRAY_DATA_COUNT - 1);
         return number % ARRAY_DATA_COUNT;
@@ -29,8 +31,8 @@ public class BitMapNew {
 
     public void add(int number) {
         int arrayIndex = getArrayIndex(number); //向右移3位 = 除以8
-        long byteIndex = getByteIndex(number);
-        bitArr[arrayIndex] |= (1 << byteIndex);
+        int byteIndex = getByteIndex(number);
+        bitArr[arrayIndex] |= 1 << byteIndex;
     }
 
     public boolean contains(int number) {
@@ -49,12 +51,12 @@ public class BitMapNew {
     private static int SIZE = 100;
 
     public static void main(String[] args) {
-        BitMapNew bitMapNew = new BitMapNew(SIZE);
+        BitMapNew64 bitMapNew = new BitMapNew64(SIZE);
         testAdd(bitMapNew);
-        // testClear(bitMapNew);
+        //testClear(bitMapNew);
     }
 
-    private static void testAdd(BitMapNew bitMapNew) {
+    private static void testAdd(BitMapNew64 bitMapNew) {
         IntStream.rangeClosed(1, SIZE).forEach(data -> {
             bitMapNew.add(data);
         });
@@ -67,7 +69,7 @@ public class BitMapNew {
         System.out.println();
     }
 
-    private static void testClear(BitMapNew bitMapNew) {
+    private static void testClear(BitMapNew64 bitMapNew) {
         IntStream.rangeClosed(1, 10).forEach(data -> {
             bitMapNew.clear(data);
         });
