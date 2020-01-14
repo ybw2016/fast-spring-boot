@@ -3,7 +3,7 @@ package com.fast.springboot.basic.algorithm;
 import java.util.stream.IntStream;
 
 /**
- * 64位存储时有问题，在number=31时会有溢出问题
+ * 64位存储时有问题，在number=31时会有溢出问题（已解决，lin36行：(long) 1 << byteIndex）
  *
  * @author bowen.yan
  * @since 2019-12-31
@@ -32,7 +32,8 @@ public class BitMapNew64 {
     public void add(int number) {
         int arrayIndex = getArrayIndex(number); //向右移3位 = 除以8
         int byteIndex = getByteIndex(number);
-        bitArr[arrayIndex] |= 1 << byteIndex;
+        // 注意：此处需要用long强制转型，否则移位后的结果会变int型溢出
+        bitArr[arrayIndex] |= (long) 1 << byteIndex;
     }
 
     public boolean contains(int number) {
