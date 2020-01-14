@@ -37,7 +37,7 @@ public class RpcClient {
      */
     public static <T> T refer(final Class<T> interfaceClass, final String host, final int port) {
 
-        return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[] {interfaceClass}, new InvocationHandler() {
+        return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
@@ -98,7 +98,7 @@ public class RpcClient {
     }
 
     public static void main(String[] args) {
-        HelloWorldSevice helloWorldSevice = RpcClient.refer(HelloWorldSevice.class, "10.88.122.187", 9999);
+        HelloWorldService helloWorldSevice = RpcClient.refer(HelloWorldService.class, "10.88.122.187", 9999);
         System.out.println(helloWorldSevice.sayHello("hello netty rpc.."));
     }
 

@@ -52,7 +52,7 @@ public class ExtractorSqlFromFiles {
             }
 
             log.info("filePath -> {}", currFile.getPath());
-            String fileContent = readToString(currFile.getPath());
+            String fileContent = readSqlFileToString(currFile.getPath());
             sqlFileMap.put(currFile.getName(), fileContent);
             exported++;
         }
@@ -81,10 +81,10 @@ public class ExtractorSqlFromFiles {
         log.info("原始sql文件删除完成！-> srcDir:{}", RAW_FILE_DIR);
 
         // 创建原始目录，以便下次使用
-        FileHelper.ensureDirExists(RAW_FILE_DIR);
+        //FileHelper.ensureDirExists(RAW_FILE_DIR);
     }
 
-    private static String readToString(String filePath) {
+    private static String readSqlFileToString(String filePath) {
         StringBuilder stringBuilder = new StringBuilder();
         File file = new File(filePath);
         String strLine;
@@ -102,7 +102,7 @@ public class ExtractorSqlFromFiles {
                     appendLine(stringBuilder, strLine);
                     break;
                 } else {
-                    if (strLine.startsWith("INSERT INTO")) {
+                    if (strLine.startsWith("INSERT INTO")|| strLine.startsWith("REPLACE INTO")) {
                         createTableStarts = false;
                         appendLine(stringBuilder, strLine);
                         //break;
@@ -112,6 +112,7 @@ public class ExtractorSqlFromFiles {
                     || strLine.startsWith("LOCK TABLES")
                     || strLine.startsWith("UNLOCK TABLES")
                     || strLine.startsWith("/*!40")
+                    || strLine.startsWith("/*!50")
                     ) {
                     continue;
                 }

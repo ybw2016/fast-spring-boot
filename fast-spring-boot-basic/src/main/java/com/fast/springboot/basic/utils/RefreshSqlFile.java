@@ -1,5 +1,6 @@
 package com.fast.springboot.basic.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -10,8 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-
-import lombok.extern.slf4j.Slf4j;
 
 import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
 
@@ -70,10 +69,10 @@ public class RefreshSqlFile {
             while ((strLine = bufferedReader.readLine()) != null) {
                 // 滤掉无用行
                 if (strLine.startsWith("/*!40")
-                        || strLine.startsWith("--")) {
+                    || strLine.startsWith("--")) {
                     continue;
                 }
-                if (strLine.toLowerCase().contains("insert into")) {
+                if (strLine.toLowerCase().contains("insert into") || strLine.toLowerCase().contains("replace into")) {
                     appendLine(insertSb, strLine);
                 } else {
                     if (strLine.trim().equals(StringUtils.EMPTY)) {

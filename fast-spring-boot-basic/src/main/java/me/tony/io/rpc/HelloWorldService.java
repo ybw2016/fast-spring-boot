@@ -7,7 +7,7 @@ package me.tony.io.rpc;
  * @version : v1.0
  * @since : 2019/8/14 16:20
  */
-public interface HelloWorldSevice {
+public interface HelloWorldService {
 
     String sayHello(String msg);
 }
