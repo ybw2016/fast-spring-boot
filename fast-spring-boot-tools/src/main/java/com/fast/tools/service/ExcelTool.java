@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class ExcelTool {
     public static void main(String[] args) {
+        // 导入文件目录
         String filePath = "/user/Documents/cardInfo.xls";
         File file = new File(filePath);
 
