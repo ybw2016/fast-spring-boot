@@ -3,6 +3,9 @@ package com.fast.springboot.basic.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 public class ReflectionUtil {
     /**
@@ -145,5 +148,16 @@ public class ReflectionUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void main(String[] args) throws NoSuchMethodException {
+        Method method = new ReflectionUtil().getClass().getMethod("applyMethod", Map.Entry.class);
+        Type[] types = method.getGenericParameterTypes();
+        ParameterizedType pType = (ParameterizedType) types[0];
+        //返回所有者类型，打印结果是interface java.util.Map
+        System.out.println(pType.getOwnerType());
+    }
+
+    public static <T, U> void applyMethod(Map.Entry<T, U> mapEntry) {
     }
 }
