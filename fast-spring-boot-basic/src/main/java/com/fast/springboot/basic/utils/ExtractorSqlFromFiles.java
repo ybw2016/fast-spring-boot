@@ -81,7 +81,7 @@ public class ExtractorSqlFromFiles {
         log.info("原始sql文件删除完成！-> srcDir:{}", RAW_FILE_DIR);
 
         // 创建原始目录，以便下次使用
-        //FileHelper.ensureDirExists(RAW_FILE_DIR);
+        FileHelper.ensureDirExists(RAW_FILE_DIR);
     }
 
     private static String readSqlFileToString(String filePath) {
@@ -102,7 +102,7 @@ public class ExtractorSqlFromFiles {
                     appendLine(stringBuilder, strLine);
                     break;
                 } else {
-                    if (strLine.startsWith("INSERT INTO")|| strLine.startsWith("REPLACE INTO")) {
+                    if (strLine.startsWith("INSERT INTO") || strLine.startsWith("REPLACE INTO")) {
                         createTableStarts = false;
                         appendLine(stringBuilder, strLine);
                         //break;
@@ -113,7 +113,7 @@ public class ExtractorSqlFromFiles {
                     || strLine.startsWith("UNLOCK TABLES")
                     || strLine.startsWith("/*!40")
                     || strLine.startsWith("/*!50")
-                    ) {
+                ) {
                     continue;
                 }
 //                if (strLine.contains("Dumping data for table")) {
