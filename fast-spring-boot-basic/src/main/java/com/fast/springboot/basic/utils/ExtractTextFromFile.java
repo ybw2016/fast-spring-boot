@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
+
 /**
  * 文本筛选工具
  *
@@ -19,7 +21,7 @@ import java.util.function.BiFunction;
  * @since 2020-07-31
  */
 public class ExtractTextFromFile {
-    private static final String RAW_FILE_DIR_BAK = "文件.txt";
+    private static final String RAW_FILE_DIR_BAK = USER_WORK_DIR + "db_export_bak/logText.txt";
 
     public static void main(String[] args) {
         //filterTextByKeyword(RAW_FILE_DIR_BAK);
