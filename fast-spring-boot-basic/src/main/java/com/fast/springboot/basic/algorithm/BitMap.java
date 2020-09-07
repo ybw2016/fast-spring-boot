@@ -3,7 +3,8 @@ package com.fast.springboot.basic.algorithm;
 import java.util.stream.IntStream;
 
 /**
- *  参考链接： https://www.jianshu.com/p/e530baada558
+ * 参考链接： https://www.jianshu.com/p/e530baada558
+ *
  * @author bowen.yan
  * @since 2019-12-31
  */
@@ -78,7 +79,7 @@ public class BitMap {
 
     /*
     参数链接：https://zhidao.baidu.com/question/1495840591329126139.html
-    二进制11111110在计算机中被表示成一个负数。它的值是多少呢？(不是254，而是2)
+    二进制11111110（补码）在计算机中被表示成一个负数。它的值是多少呢？(不是254，而是-2)
     因为负数的补码等于其绝对值的原码按位取反再加一，所以如果知道一个负数的补码，
     我们可以先减一再按位取反就得到了该数的绝对值。
     11111110 - 1 = 11111101
@@ -98,5 +99,9 @@ public class BitMap {
 二进制：         0   0   0   0   0   0   1   0
 取反：           1   1   1   1   1   1   0   1
 加1：            1   1   1   1   1   1   1   0
+    * */
+
+    /*
+    注：8位二进制补码11111110表示十进制数-2。8位二进制原码11111110表示十进制数-254。
     * */
 }
