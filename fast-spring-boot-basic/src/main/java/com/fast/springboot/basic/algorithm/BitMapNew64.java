@@ -19,31 +19,32 @@ public class BitMapNew64 {
         this.bitArr = new long[(capacity / ARRAY_DATA_COUNT) + 1];
     }
 
-    private int getArrayIndex(int number) {
-        return number / ARRAY_DATA_COUNT;
+    private int getArrayIndex(long number) {
+        return (int) number / ARRAY_DATA_COUNT;
     }
 
-    private int getByteIndex(int number) {
+    private long getByteIndex(long number) {
         // number = 9, ARRAY_DATA_COUNT = 8, 期望值：1
         //return number & (ARRAY_DATA_COUNT - 1);
         return number % ARRAY_DATA_COUNT;
     }
 
-    public void add(int number) {
+    public void add(long number) {
         int arrayIndex = getArrayIndex(number); //向右移3位 = 除以8
-        int byteIndex = getByteIndex(number);
-        // 注意：此处需要用long强制转型，否则移位后的结果会变int型溢出
+        long byteIndex = getByteIndex(number);
+        // 注意：此处需要将number 1用long强制转型，否则移位后的结果会变int型溢出
         bitArr[arrayIndex] |= (long) 1 << byteIndex;
+        //bitArr[arrayIndex] |= 1L << byteIndex;
     }
 
-    public boolean contains(int number) {
+    public boolean contains(long number) {
         int arrayIndex = getArrayIndex(number);
         long byteIndex = getByteIndex(number);
         return ((bitArr[arrayIndex] >>> byteIndex) & 1) == 1;
         //return (bitArr[arrayIndex] & (1 << byteIndex)) != 0;
     }
 
-    public void clear(int number) {
+    public void clear(long number) {
         int arrayIndex = getArrayIndex(number);
         long byteIndex = getByteIndex(number);
         bitArr[arrayIndex] &= ~(1 << byteIndex);
