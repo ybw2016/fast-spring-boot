@@ -26,7 +26,8 @@ public class ExtractTextFromFile {
     public static void main(String[] args) {
         //System.out.println(extractKeyWord("\"data\":{\"loanResult\":\"99\",\"CODE\":\"999999\","));
         //filterTextByKeyword(RAW_FILE_DIR_BAK);
-        filterTextByKeyword(RAW_FILE_DIR_BAK, "KEYWORD，", "，rsp={\"code\":1000", true);
+        //filterTextByKeyword(RAW_FILE_DIR_BAK, "请求中台放款结果，", "，rsp={\"code\":1000", true);
+        filterTextByKeyword(RAW_FILE_DIR_BAK, "manualNotifyXb?", ", manualNotifyXbNewKey", false);
     }
 
     private static void filterTextByKeyword(String filePath, String prefix, String suffix, boolean searchResult) {
