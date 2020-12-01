@@ -1,4 +1,4 @@
-package com.fast.springboot.basic.algorithm;
+package com.fast.springboot.basic.algorithm.bitmap;
 
 import java.util.stream.IntStream;
 

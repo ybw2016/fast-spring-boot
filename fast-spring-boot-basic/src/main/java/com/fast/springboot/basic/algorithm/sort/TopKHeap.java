@@ -1,4 +1,4 @@
-package com.fast.springboot.basic.sort;
+package com.fast.springboot.basic.algorithm.sort;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

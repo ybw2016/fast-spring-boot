@@ -1,4 +1,4 @@
-package com.fast.springboot.basic.algorithm;
+package com.fast.springboot.basic.algorithm.bitmap;
 
 /**
  * 常用位运算：
