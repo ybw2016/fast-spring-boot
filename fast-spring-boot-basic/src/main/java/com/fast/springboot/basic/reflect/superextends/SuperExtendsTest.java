@@ -1,7 +1,16 @@
 package com.fast.springboot.basic.reflect.superextends;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * 参考链接： https://www.cnblogs.com/JasonLGJnote/p/11159869.html
+ *
+ * 一句话总结 super & extends：PECS原则（Producer Extends Consumer Super）
+ * 即：
+ * 1. 返回的List<T>集合如果希望是只读的，则用extends;
+ * 2. 返回的List<T>集合可以往里面添加元素，则用super;
  *
  * @author bw
  * @since 2020-11-27
@@ -25,6 +34,9 @@ public class SuperExtendsTest {
     private static class Banana extends Fruit {
     }
 
+    private static class Orange extends Fruit {
+    }
+
     private static class Pork extends Meat {
     }
 
@@ -38,7 +50,72 @@ public class SuperExtendsTest {
     private static class GreenApple extends Apple {
     }
 
+    public static List<? extends Fruit> getExtendsFruits() {
+        List<Fruit> extendsFruits = Lists.newArrayList(
+            new Apple(),
+            new Banana()
+        );
+        return extendsFruits;
+    }
+
+    private static void testReadExtendsFruits() {
+        // 运行结果：
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Apple
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Banana
+        getExtendsFruits().forEach(extendsFruit -> System.out.println(extendsFruit.getClass().getName()));
+    }
+
+    public static List<? super Fruit> getSuperFruits() {
+        List<Fruit> superFruits = Lists.newArrayList(
+            new Apple(),
+            new Banana()
+        );
+        return superFruits;
+    }
+
+    private static void testSetSuperFruits() {
+        List<? super Fruit> superFruits = getSuperFruits();
+        superFruits.add(new Orange());
+
+        // 运行结果：
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Apple
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Banana
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Orange
+        superFruits.forEach(superFruit -> System.out.println(superFruit.getClass().getName()));
+    }
+
+    public static List<Fruit> getFruits() {
+        List<Fruit> superFruits = Lists.newArrayList(
+            new Apple(),
+            new Banana()
+        );
+        return superFruits;
+    }
+
+    private static void testFruits() {
+        List<Fruit> fruits = getFruits();
+        fruits.add(new Orange());
+
+        // 运行结果：
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Apple
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Banana
+        //com.fast.springboot.basic.reflect.superextends.SuperExtendsTest$Orange
+        fruits.forEach(fruit -> System.out.println("CommonFruit-" + fruit.getClass().getName()));
+    }
+
     public static void main(String[] args) {
+        System.out.println("----------TEST extends----------");
+        testReadExtendsFruits();// 只能读
+        System.out.println();
+
+        System.out.println("----------TEST super----------");
+        testSetSuperFruits();// 能写
+        System.out.println();
+
+        System.out.println("----------TEST common fruits----------");
+        testFruits();// 能读、能写
+        System.out.println();
+
         /*
         //
         ====================> <? extends T>：是指 “上界通配符（Upper Bounds Wildcards）” <====================
