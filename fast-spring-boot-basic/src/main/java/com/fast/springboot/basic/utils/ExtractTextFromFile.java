@@ -2,12 +2,7 @@ package com.fast.springboot.basic.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -15,7 +10,7 @@ import java.util.function.BiFunction;
 import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
 
 /**
- * 文本筛选工具
+ * 文本筛选工具（提取关键字后面的偏移字符串 + 搜索结果二次提取）
  *
  * @author bw
  * @since 2020-07-31
@@ -24,13 +19,10 @@ public class ExtractTextFromFile {
     private static final String RAW_FILE_DIR_BAK = USER_WORK_DIR + "db_export_bak/logText.txt";
 
     public static void main(String[] args) {
-        //System.out.println(extractKeyWord("\"data\":{\"loanResult\":\"99\",\"CODE\":\"999999\","));
-        //filterTextByKeyword(RAW_FILE_DIR_BAK);
-        //filterTextByKeyword(RAW_FILE_DIR_BAK, "请求中台放款结果，", "，rsp={\"code\":1000", true);
-        filterTextByKeyword(RAW_FILE_DIR_BAK, "manualNotifyXb?", ", manualNotifyXbNewKey", false);
+        filterTextByKeyword(RAW_FILE_DIR_BAK, "handleProgress?", ", status", false);
     }
 
-    private static void filterTextByKeyword(String filePath, String prefix, String suffix, boolean searchResult) {
+    private static void filterTextByKeyword(String filePath, String prefix, String suffix, boolean searchSubKeywordFromResult) {
         File file = new File(filePath);
         List<String> textList = new ArrayList<>();
         String rawStrLine;
@@ -43,10 +35,10 @@ public class ExtractTextFromFile {
                 String strLine = rawStrLine;
                 if (StringUtils.isNotBlank(prefix) || StringUtils.isNotBlank(suffix)) {
                     BiFunction<String, String, Boolean> conditionChecker = (text, keyword) ->
-                        StringUtils.isBlank(keyword) || StringUtils.isNotBlank(keyword) && text.contains(keyword);
+                            StringUtils.isBlank(keyword) || StringUtils.isNotBlank(keyword) && text.contains(keyword);
 
                     if (!conditionChecker.apply(rawStrLine, prefix)
-                        || !conditionChecker.apply(rawStrLine, suffix)) {
+                            || !conditionChecker.apply(rawStrLine, suffix)) {
                         continue;
                     }
 
@@ -61,8 +53,8 @@ public class ExtractTextFromFile {
                     strLine = strLine.substring(startIndex + skipPrefix, endIndex);
                     System.out.println(String.format("--------> prefix:%s, suffix:%s, strLine:%s", prefix, suffix, strLine));
 
-                    if (searchResult) {
-                        strLine = String.format("%s ---> %s", strLine, extractKeyWord(rawStrLine));
+                    if (searchSubKeywordFromResult) {
+                        strLine = String.format("%s ---> %s", strLine, extractSubKeyWordByOffset(rawStrLine));
                         System.out.println(String.format("--------> strLine with keyWord:%s", strLine));
                     }
                 }
@@ -83,9 +75,16 @@ public class ExtractTextFromFile {
         textList.forEach(System.out::println);
     }
 
-    private static String extractKeyWord(String inputText) {
+    /**
+     * 如果需要从搜索结果中二次提取想要的关键字，则可以在此处设置并提取
+     *
+     * @param inputText 原始的匹配行
+     * @return 抽取的子结果
+     */
+    private static String extractSubKeyWordByOffset(String inputText) {
         try {
-            String keyWord = "\"loanResult\"";
+            // 此处的dataResult可任意更改
+            String keyWord = "\"dataResult\"";
             if (inputText.contains(keyWord)) {
                 int startIndex = inputText.indexOf(keyWord);
                 return inputText.substring(startIndex, startIndex + keyWord.length() + 5);
