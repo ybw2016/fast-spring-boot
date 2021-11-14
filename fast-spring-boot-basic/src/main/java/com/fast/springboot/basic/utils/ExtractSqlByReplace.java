@@ -15,7 +15,7 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
  * @since 2020-07-31
  */
 public class ExtractSqlByReplace {
-    private static final String RAW_FILE_DIR_BAK = USER_WORK_DIR + "/replaceText.sql";
+    private static final String RAW_FILE_DIR_BAK = USER_WORK_DIR + "/zReplaceText.sql";
 
     private static final List<String> KEY_WORD_LIST = Lists.newArrayList(
             "AAA",
