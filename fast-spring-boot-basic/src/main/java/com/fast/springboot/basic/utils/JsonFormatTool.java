@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * Json日志替换器
- * 说明：json在打印成字符串到日志中，有时会出现json格式丢失的情况，如多了引号、少了引号、有斜线等等，需要格式化
+ * 说明：json在打印成字符串到日志中，有时会出现json格式丢失的情况，如多了引号、少了引号、有斜线、json被多次系统化产生斜线等等，需要格式化
  *
  * @author yanbowen
  * @date 2021-12-05
