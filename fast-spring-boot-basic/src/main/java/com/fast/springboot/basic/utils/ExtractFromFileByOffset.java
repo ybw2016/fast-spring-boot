@@ -15,11 +15,11 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_FILE_DIR;
  * @author bw
  * @since 2020-07-31
  */
-public class ExtractTextFromFileExt {
-    private static final String RAW_FILE_DIR_BAK = USER_WORK_FILE_DIR + "/logKeyWordExtractor.txt";
+public class ExtractFromFileByOffset {
+    private static final String RAW_FILE_DIR_BAK = USER_WORK_FILE_DIR + "/logFileByOffset.txt";
 
     public static void main(String[] args) {
-        filterTextByKeyword(RAW_FILE_DIR_BAK, ", ", 30);
+        filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD", 30);
     }
 
     private static void filterTextByKeyword(String filePath, String keyWord, int postOffset) {

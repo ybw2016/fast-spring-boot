@@ -17,15 +17,14 @@ import java.util.regex.Pattern;
  */
 public class JsonFormatTool {
     public static void main(String[] args) {
-        String inputJson = "\"{\\\"data\\\":\\\"{\\\\\\\"amount\\\\\\\":610.36,\\\\\\\"mobile\\\\\\\":\\\\\\189****1111\"\\\\\",\\\\\\\"idCardNo\\\\\\\":\\\\\\\"6103**********2236\"\\\\\"}}\"";
+        String inputJson = "\"{\\\"data\\\":\\\"{\\\\\\\"amount\\\\\\\":610.36,\\\\\\\"mobile\\\\\\\":\\\\\\189****1111\"\\\\\",\"address\":\"\",\\\\\\\"idCardNo\\\\\\\":\\\\\\\"6103**********2236\"\\\\\"}}\"";
         String formatJson = StringWrapper.buildWith(inputJson)
                 .removeSlash()
-                .removeMultiQuota()
-                .removeQuotaAndLeftBrace()
-                .removeQuotaAndRightBrace()
-                .fixQuote()
+                .removeQuotaWithBrace()
+                .removeQuotaWithComma()
+                .addMobileLeftQuote()
                 .build();
-        // 输出结果：{"data":{"amount":610.36,"mobile":"189****1111","idCardNo":"6103**********2236"}}
+        // 输出结果：{"data":{"amount":610.36,"mobile":"189****1111","address":"","idCardNo":"6103**********2236"}}
         System.out.println(formatJson);
     }
 
@@ -43,34 +42,71 @@ public class JsonFormatTool {
             return new StringWrapper(rawInputStr);
         }
 
-        // // -> ""
+        // \\ -> ""
         private StringWrapper removeSlash() {
             inputStr = inputStr.replaceAll("\\\\", "");
             return this;
         }
 
-        //  "" -> "
-        private StringWrapper removeMultiQuota() {
-            while (inputStr.contains("\"\"")) {
-                inputStr = inputStr.replaceAll("\"\"", "\"");
+        private StringWrapper removeQuotaWithBrace() {
+            //  1. 左括号
+            // ""{ -> {
+            while (inputStr.contains("\"\"{")) {
+                inputStr = inputStr.replaceAll("\"\"\\{", "{");
             }
+            // "{ -> {
+            while (inputStr.contains("\"{")) {
+                inputStr = inputStr.replaceAll("\"\\{", "{");
+            }
+
+            // 2. 右括号
+            // }"" -> }
+            while (inputStr.contains("}\"\"")) {
+                inputStr = inputStr.replaceAll("}\"\"", "}");
+            }
+            // }" -> }
+            while (inputStr.contains("}\"")) {
+                inputStr = inputStr.replaceAll("}\"", "}");
+            }
+
+            // 3. 先引号再右括号
+            // ""}  ->  "}
+            while (inputStr.contains("\"\"}")) {
+                inputStr = inputStr.replaceAll("\"\"}", "\"}");
+            }
+
             return this;
         }
 
-        // "{ -> {
-        private StringWrapper removeQuotaAndLeftBrace() {
-            inputStr = inputStr.replaceAll("\"\\{", "{");
-            return this;
-        }
+        // "",  ->  ",
+        private StringWrapper removeQuotaWithComma() {
+            StringBuilder sb = new StringBuilder();
+            String keyWord = "\"\",";
+            String remainStr = inputStr;
 
-        // }" -> }
-        private StringWrapper removeQuotaAndRightBrace() {
-            inputStr = inputStr.replaceAll("\\}\"", "}");
+            if (remainStr.contains(keyWord)) {
+                while (remainStr.contains(keyWord)) {
+                    int pos = remainStr.indexOf(keyWord);
+                    String sign = remainStr.substring(pos - 1, pos);
+                    String replaceText;
+                    // 有冒号说明当前是空的字符串，无需替换
+                    if (":".equals(sign)) {
+                        replaceText = keyWord;
+                    } else {
+                        // 文本替换：  "",  ->  ",
+                        replaceText = "\",";
+                    }
+                    sb.append(remainStr.substring(0, pos)).append(replaceText);
+                    remainStr = remainStr.substring(pos + keyWord.length());
+                }
+                inputStr = sb.toString() + remainStr;
+            }
+
             return this;
         }
 
         // 138****1111 -> "138****1111
-        private StringWrapper fixQuote() {
+        private StringWrapper addMobileLeftQuote() {
             Matcher matcher = MOBILE_PATTERN.matcher(inputStr);
             List<String> handledWords = Lists.newArrayList();
             while (matcher.find()) {
