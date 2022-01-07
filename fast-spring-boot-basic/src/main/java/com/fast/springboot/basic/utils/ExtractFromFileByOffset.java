@@ -23,13 +23,11 @@ public class ExtractFromFileByOffset {
     }
 
     private static void filterTextByKeyword(String filePath, String keyWord, int postOffset) {
-        File file = new File(filePath);
         List<String> textList = new ArrayList<>();
-        String rawStrLine;
-
-        try (FileInputStream fileInputStream = new FileInputStream(file);
+        try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            String rawStrLine;
             while ((rawStrLine = bufferedReader.readLine()) != null) {
 
                 String strLine = rawStrLine;

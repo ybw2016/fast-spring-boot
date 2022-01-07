@@ -1,11 +1,6 @@
 package com.fast.springboot.basic.utils;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
 
 import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_FILE_DIR;
 
@@ -23,31 +18,15 @@ public class ExtractFromFileByContains {
     }
 
     private static void filterTextByKeyword(String filePath, String keyWord) {
-        File file = new File(filePath);
-        List<String> textList = new ArrayList<>();
-        String rawStrLine;
-
-        try (FileInputStream fileInputStream = new FileInputStream(file);
+        try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            while ((rawStrLine = bufferedReader.readLine()) != null) {
-
-                String strLine = rawStrLine;
-                if (StringUtils.isNotBlank(keyWord)) {
-                    BiFunction<String, String, Boolean> conditionChecker = (text, keyword) ->
-                            StringUtils.isBlank(keyword) || StringUtils.isNotBlank(keyword) && text.contains(keyword);
-
-                    if (!conditionChecker.apply(rawStrLine, keyWord)) {
-                        continue;
-                    }
-
-                    try {
-                        System.out.println(String.format("--------> keyWord:%s, strLine:%s", keyWord, strLine));
-                    } catch (Exception ex) {
-                        System.out.println("文本截取失败 -> " + rawStrLine);
-                    }
+            String strLine;
+            while ((strLine = bufferedReader.readLine()) != null) {
+                if (!strLine.contains(keyWord)) {
+                    continue;
                 }
-                textList.add(strLine);
+                System.out.println(String.format("--------> keyWord:%s, strLine:%s", keyWord, strLine));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -57,6 +36,5 @@ public class ExtractFromFileByContains {
 
         System.out.println();
         System.out.println("=============================筛选后的最终文本=============================");
-        textList.forEach(System.out::println);
     }
 }

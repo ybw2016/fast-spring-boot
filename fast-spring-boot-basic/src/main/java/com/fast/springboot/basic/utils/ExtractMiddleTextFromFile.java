@@ -26,13 +26,11 @@ public class ExtractMiddleTextFromFile {
     }
 
     private static void filterTextByKeyword(String filePath, String prefix, String suffix, boolean searchSubKeywordFromResult) {
-        File file = new File(filePath);
         List<String> textList = new ArrayList<>();
-        String rawStrLine;
-
-        try (FileInputStream fileInputStream = new FileInputStream(file);
+        try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            String rawStrLine;
             while ((rawStrLine = bufferedReader.readLine()) != null) {
 
                 String strLine = rawStrLine;
