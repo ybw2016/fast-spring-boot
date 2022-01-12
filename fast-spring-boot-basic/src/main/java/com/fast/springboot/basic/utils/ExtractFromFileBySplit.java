@@ -32,7 +32,7 @@ public class ExtractFromFileBySplit {
             String rawStrLine;
             while ((rawStrLine = bufferedReader.readLine()) != null) {
                 String[] arr = rawStrLine.split(keyWord);
-                String sql = String.format("update $table_name set value ='%s' where id = %s;", JSON.toJSONString(arr[1]), arr[0]);
+                String sql = String.format("update $table_name set $column_name ='%s' where id = %s;", JSON.toJSONString(arr[1]), arr[0]);
                 System.out.println(sql);
             }
         } catch (FileNotFoundException e) {
