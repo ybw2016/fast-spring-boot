@@ -11,6 +11,15 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_FILE_DIR;
 
 /**
  * 文本筛选工具（提取关键字后面的偏移字符串）
+ * 样例：afsdfsfsd_$keywordAAABBBCCC_TTT_P
+ * 样例1： filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD", 30)
+ * 结果：AAABBBCCC
+ * <p>
+ * 样例2： filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD", 34)
+ * 结果：AAABBBCCC_TTT
+ * <p>
+ * 样例3： filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD", 36)
+ * 结果：AAABBBCCC_TTT_P
  *
  * @author bw
  * @since 2020-07-31
