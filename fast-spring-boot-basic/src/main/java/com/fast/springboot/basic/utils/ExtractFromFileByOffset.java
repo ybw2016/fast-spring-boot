@@ -22,6 +22,11 @@ public class ExtractFromFileByOffset {
         filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD", 30);
     }
 
+    /**
+     * @param filePath   文件真实路径
+     * @param keyWord    匹配的关键字
+     * @param postOffset 偏移的字符数，-1表示匹配到该行结尾
+     */
     private static void filterTextByKeyword(String filePath, String keyWord, int postOffset) {
         List<String> textList = new ArrayList<>();
         try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
@@ -40,7 +45,12 @@ public class ExtractFromFileByOffset {
                     }
 
                     int startIndex = rawStrLine.indexOf(keyWord) + keyWord.length();
-                    int endIndex = startIndex + postOffset;
+                    int endIndex;
+                    if (postOffset == -1) {
+                        endIndex = rawStrLine.length();
+                    } else {
+                        endIndex = startIndex + postOffset;
+                    }
                     System.out.println(String.format("--------> startIndex:%s, endIndex:%s", startIndex, endIndex));
 
                     try {
