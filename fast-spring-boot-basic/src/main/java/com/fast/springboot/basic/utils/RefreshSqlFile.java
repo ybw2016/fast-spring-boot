@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
-import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
+import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_SQL_DIR;
 
 /**
  * 从mysql数据库表中提取并合并到一个文件中
@@ -26,8 +26,8 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
  */
 @Slf4j
 public class RefreshSqlFile {
-    private static final String RAW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables.sql";
-    private static final String NEW_SQL_FILE_PATH = USER_WORK_DIR + "db_all_tables_New.sql";
+    private static final String RAW_SQL_FILE_PATH = USER_WORK_SQL_DIR + "db_all_tables.sql";
+    private static final String NEW_SQL_FILE_PATH = USER_WORK_SQL_DIR + "db_all_tables_New.sql";
 
     public static void main(String[] args) throws FileNotFoundException {
         refreshFile(RAW_SQL_FILE_PATH, NEW_SQL_FILE_PATH);

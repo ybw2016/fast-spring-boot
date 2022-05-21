@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
+import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_SQL_DIR;
 
 /**
  * 文本替换工具
@@ -15,7 +15,7 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_DIR;
  * @since 2020-07-31
  */
 public class SqlGenerateTool {
-    private static final String RAW_FILE_DIR_BAK = USER_WORK_DIR + "/zReplaceText.sql";
+    private static final String RAW_FILE_DIR_BAK = USER_WORK_SQL_DIR + "/zReplaceText.sql";
 
     private static final List<String> KEY_WORD_LIST = Lists.newArrayList(
             "AAA",
