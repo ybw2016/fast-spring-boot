@@ -1,6 +1,5 @@
 package com.fast.springboot.basic.utils;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 
 import java.io.*;
@@ -20,24 +19,24 @@ public class ExtractByCompareAWithB {
     public static void main(String[] args) {
         List<String> allContents = getTextFromFile(UserConstants.USER_WORK_FILE_DIR + "compareFiles/allOfA.txt");
         List<String> subContents = getTextFromFile(UserConstants.USER_WORK_FILE_DIR + "compareFiles/partOfB.txt");
-        List<String> exists = Lists.newArrayList();
+        List<String> foundAllContents = Lists.newArrayList();
         List<String> notExists = Lists.newArrayList();
-        for (String subContent : subContents) {
-            if (allContents.contains(subContent)) {
-                exists.add(subContent);
+        for (String allContent : allContents) {
+            if (subContents.stream().anyMatch(allContent::contains)) {
+                foundAllContents.add(allContent);
             } else {
-                notExists.add(subContent);
+                notExists.add(allContent);
             }
         }
 
-        System.out.println(JSON.toJSONString(exists));
-        System.out.println("————> 存在条数: " + exists.size());
+        foundAllContents.forEach(System.out::println);
+        System.out.println("————> 存在条数: " + foundAllContents.size());
 
         System.out.println();
         System.out.println();
 
         notExists = notExists.stream().distinct().collect(Collectors.toList());
-        System.out.println(JSON.toJSONString(notExists));
+        notExists.forEach(System.out::println);
         System.out.println("————> 不存在条数: " + notExists.size());
     }
 
