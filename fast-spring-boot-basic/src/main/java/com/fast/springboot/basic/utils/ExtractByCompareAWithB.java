@@ -48,7 +48,7 @@ public class ExtractByCompareAWithB {
         File textFile = new File(NEW_NON_DUP_FILE_PATH);
         textFile.delete();
         try (PrintStream printStream = new PrintStream(new FileOutputStream(textFile))) {
-            subContents.forEach(printStream::println);
+            notExists.forEach(printStream::println);
         }
         System.out.println("———— 输出到文件完成 ————");
         System.out.println();
