@@ -29,7 +29,7 @@ public class ExtractFromFileBySplit {
     private static final String RAW_FILE_DIR_BAK = USER_WORK_FILE_DIR + "/logFileBySplit.txt";
 
     public static void main(String[] args) {
-        filterTextByKeyword(RAW_FILE_DIR_BAK, "#");
+        filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD");
     }
 
     private static void filterTextByKeyword(String filePath, String keyWord) {
