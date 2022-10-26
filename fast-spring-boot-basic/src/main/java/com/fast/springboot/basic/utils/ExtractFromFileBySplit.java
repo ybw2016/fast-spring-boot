@@ -1,8 +1,15 @@
 package com.fast.springboot.basic.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 
 import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_FILE_DIR;
 
@@ -22,10 +29,11 @@ public class ExtractFromFileBySplit {
     private static final String RAW_FILE_DIR_BAK = USER_WORK_FILE_DIR + "/logFileBySplit.txt";
 
     public static void main(String[] args) {
-        filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD");
+        filterTextByKeyword(RAW_FILE_DIR_BAK, "#");
     }
 
     private static void filterTextByKeyword(String filePath, String keyWord) {
+        List<String> textResults = Lists.newArrayList();
         try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
@@ -34,12 +42,15 @@ public class ExtractFromFileBySplit {
                 String[] arr = rawStrLine.split(keyWord);
                 String sql = String.format("update $table_name set $column_name ='%s' where id = %s;", JSON.toJSONString(arr[1]), arr[0]);
                 System.out.println(sql);
+                textResults.add(sql);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        FileExtHelper.writeToFile(textResults);
 
         System.out.println();
     }
