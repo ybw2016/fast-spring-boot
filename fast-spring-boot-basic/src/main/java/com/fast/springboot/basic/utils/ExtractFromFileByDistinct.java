@@ -16,7 +16,7 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_FILE_DIR;
  * @author bw
  * @since 2022-08-06
  */
-public class ExtractByDistinct {
+public class ExtractFromFileByDistinct {
     private static final String NEW_DISTINCT_FILE_PATH = USER_WORK_FILE_DIR + "logFileByDistinct-NEW.txt";
 
     public static void main(String[] args) throws FileNotFoundException {
