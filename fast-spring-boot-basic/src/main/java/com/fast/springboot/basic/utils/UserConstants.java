@@ -7,4 +7,5 @@ package com.fast.springboot.basic.utils;
 public class UserConstants {
     public static final String USER_WORK_SQL_DIR = System.getenv("USER_WORK_SQL_DIR");
     public static final String USER_WORK_FILE_DIR = System.getenv("USER_WORK_FILE_DIR");
+    public static final String USER_WORK_SRC_FILE_DIR = System.getenv("USER_WORK_SRC_FILE_DIR");
 }
