@@ -95,6 +95,11 @@
             <version>5.8.18</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.3.3</version>
+        </dependency>
 
     </dependencies>
 
