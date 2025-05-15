@@ -57,7 +57,7 @@ public class ExtractMiddleTextFromFile {
 
                     if (searchSubKeywordFromResult) {
                         strLine = String.format("%s ---> %s", strLine, extractSubKeyWordByOffset(rawStrLine));
-                        System.out.println(String.format("--------> strLine with keyWord:%s", strLine));
+                        System.out.println(String.format("--------> strLine with keyword:%s", strLine));
                     }
                 }
                 if (textList.contains(strLine)) {

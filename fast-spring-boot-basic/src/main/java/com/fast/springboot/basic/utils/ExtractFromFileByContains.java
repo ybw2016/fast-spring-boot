@@ -17,16 +17,16 @@ public class ExtractFromFileByContains {
         filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD");
     }
 
-    private static void filterTextByKeyword(String filePath, String keyWord) {
+    private static void filterTextByKeyword(String filePath, String keyword) {
         try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             String strLine;
             while ((strLine = bufferedReader.readLine()) != null) {
-                if (!strLine.contains(keyWord)) {
+                if (!strLine.contains(keyword)) {
                     continue;
                 }
-                System.out.println(String.format("--------> keyWord:%s, strLine:%s", keyWord, strLine));
+                System.out.println(String.format("--------> keyword:%s, strLine:%s", keyword, strLine));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
