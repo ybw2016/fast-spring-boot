@@ -40,7 +40,7 @@ public class UserHandler {
      */
     public Mono<ServerResponse> userList(ServerRequest request) {
         Flux<User> userFlux =
-            Flux.fromArray(new User[] {new User("ybw", 30), new User("lsj", 33)});
+            Flux.fromArray(new User[] {new User("abc", 30), new User("def", 33)});
         return ServerResponse.ok().contentType(APPLICATION_JSON).body(userFlux, User.class);
     }
 }
