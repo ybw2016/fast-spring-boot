@@ -32,14 +32,14 @@ public class ExtractFromFileBySplit {
         filterTextByKeyword(RAW_FILE_DIR_BAK, "$YOUR_KEYWORD");
     }
 
-    private static void filterTextByKeyword(String filePath, String keyWord) {
+    private static void filterTextByKeyword(String filePath, String keyword) {
         List<String> textResults = Lists.newArrayList();
         try (FileInputStream fileInputStream = new FileInputStream(new File(filePath));
              InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             String rawStrLine;
             while ((rawStrLine = bufferedReader.readLine()) != null) {
-                String[] arr = rawStrLine.split(keyWord);
+                String[] arr = rawStrLine.split(keyword);
                 String sql = String.format("update $table_name set $column_name ='%s' where id = %s;", JSON.toJSONString(arr[1]), arr[0]);
                 System.out.println(sql);
                 textResults.add(sql);

@@ -17,9 +17,13 @@ public class FileExtHelper {
     private static final String SAVE_TEXT_FILE_PATH = USER_WORK_FILE_DIR + "/logFileOutPutResult.txt";
 
     public static void writeToFile(List<String> texts) {
+        writeToFile(SAVE_TEXT_FILE_PATH, texts);
+    }
+
+    public static void writeToFile(String filePath, List<String> texts) {
         try {
             // 2、输出到文件中
-            File textFile = new File(SAVE_TEXT_FILE_PATH);
+            File textFile = new File(filePath);
             textFile.delete();
             try (PrintStream printStream = new PrintStream(new FileOutputStream(textFile))) {
                 texts.forEach(printStream::println);
