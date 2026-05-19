@@ -10,7 +10,7 @@ import static com.fast.springboot.basic.utils.UserConstants.USER_WORK_FILE_DIR;
 /**
  * 文件辅助工具（输出到文件中）
  *
- * @author yanbowen
+ * @author dev_jv
  * @date 2022-10-26
  */
 public class FileExtHelper {
